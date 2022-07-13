@@ -1,0 +1,15 @@
+{
+    "name": "tombroucke/otomaties-deployer",
+    "description": "Deploy Bedrock & Sage",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Tom Broucke",
+            "email": "tom@tombroucke.be"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.4",
+        "deployer/deployer": "v7.0.0-rc.8"
+    }
+}
