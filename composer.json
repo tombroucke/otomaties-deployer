@@ -10,6 +10,6 @@
     ],
     "require": {
         "vlucas/phpdotenv": "^5.4",
-        "deployer/deployer": "v7.0.0-rc.8"
+        "deployer/deployer": "^7.0"
     }
 }
