@@ -8,13 +8,15 @@ task('combell:reloadPHP', function () {
     reloadPhp();
 
     writeln('Waiting for Combell to reload');
-    $revision = get('release_revision');
-    writeln('searching for revision ' . $revision);
+    $reloadedFileCheckContent = date('YmdHis') . ' ' . get('release_revision');
+    run('echo "' . $reloadedFileCheckContent . '" > {{release_path}}/www/combell-reloaded-check.txt');
 
     $sleep = 10;
     $iterations = 0;
     $start = microtime(true);
-    while (!revisionHasBeenUpdated($revision)) {
+    writeln('searching for ' . $reloadedFileCheckContent);
+
+    while (!revisionHasBeenUpdated($reloadedFileCheckContent)) {
         sleep($sleep);
         switch ($iterations) {
             case 3:
@@ -38,6 +40,7 @@ task('combell:reloadPHP', function () {
     }
     $timeElapsed = microtime(true) - $start;
     writeln(sprintf('Combell reloaded after %ss.', $timeElapsed));
+    run('rm {{release_path}}/www/combell-reloaded-check.txt');
 });
 
 /** Reset OPcode cache */
@@ -49,11 +52,12 @@ task('combell:reset_opcode_cache', function () {
 
     if ($info['http_code'] === 200) {
         writeln('OPcode cache has been reset');
-        writeln('Deleting opcache_reset file');
-        run('rm {{release_path}}/www/opcache_reset.{{release_revision}}.php');
     } else {
         writeln('Could not reset OPcode cache');
     }
+
+    writeln('Deleting opcache_reset file');
+    run('rm {{release_path}}/www/opcache_reset.{{release_revision}}.php');
 });
 
 function reloadPhp()
@@ -61,8 +65,8 @@ function reloadPhp()
     run('reloadPHP.sh');
 }
 
-function revisionHasBeenUpdated($revision)
+function revisionHasBeenUpdated($reloadedFileCheckContent)
 {
-    $revisionFileContent = fetch(rtrim(get('url'), '/') . '/revision.txt');
-    return strpos($revisionFileContent, $revision) === 15;
+    $reloadedFileContent = fetch(rtrim(get('url'), '/') . '/combell-reloaded-check.txt');
+    return strpos($reloadedFileContent, $reloadedFileCheckContent) === 0;
 }
