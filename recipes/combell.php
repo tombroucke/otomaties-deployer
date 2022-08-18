@@ -11,28 +11,22 @@ task('combell:reloadPHP', function () {
     $reloadedFileCheckContent = date('YmdHis') . ' ' . get('release_revision');
     run('echo "' . $reloadedFileCheckContent . '" > {{release_path}}/www/combell-reloaded-check.txt');
 
-    $sleep = 10;
+    $sleep = 5;
+    $checkEvery = 30;
+    $limit = 120;
     $iterations = 0;
     $start = microtime(true);
-    writeln('searching for ' . $reloadedFileCheckContent);
 
     while (!revisionHasBeenUpdated($reloadedFileCheckContent)) {
         sleep($sleep);
-        switch ($iterations) {
-            case 3:
-                writeln('Revision was not found after 30 seconds, reloading PHP');
-                reloadPhp();
-                break;
-            case 6:
-                writeln('Revision was not found after 60 seconds, reloading PHP');
-                reloadPhp();
-                break;
-            case 9:
-                writeln('Revision was not found after 90 seconds, reloading PHP');
-                reloadPhp();
-                break;
+        $secondsElapsed = $checkEvery * $iterations + $checkEvery;
+
+        if ($checkEvery % $sleep == 0) {
+            writeln('Revision was not found after ' . $secondsElapsed . ' seconds, reloading PHP');
+            reloadPhp();
         }
-        if ($iterations == 12) {
+
+        if ($secondsElapsed == $limit) {
             writeln('Revision was not found after 120 seconds, continuing');
             break;
         }
@@ -48,6 +42,9 @@ desc('Reset OPcode cache');
 task('combell:reset_opcode_cache', function () {
     writeln('Writing opcache_reset file');
     run('echo "<?php opcache_reset();" > {{release_path}}/www/opcache_reset.{{release_revision}}.php');
+
+    sleep(5);
+
     fetch(rtrim(get('url'), '/') . '/opcache_reset.' . get('release_revision') . '.php', info: $info);
 
     if ($info['http_code'] === 200) {
