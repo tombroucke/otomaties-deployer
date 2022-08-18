@@ -28,7 +28,7 @@ require 'vendor/tombroucke/otomaties-deployer/recipes/wp-rocket.php';
 /** Config */
 set('application', '');
 set('repository', '');
-set('sage/theme_path', 'www/app/themes/themename');
+set('sage/theme_path', get('web_root') . '/app/themes/themename');
 set('sage/build_command', 'build --clean'); // build --clean for bud, build:production for mix
 
 /** Hosts */
@@ -42,6 +42,8 @@ host('production')
 host('staging')
     ->set('hostname', 'ssh###.webhosting.be')
     ->set('url', '')
+    ->set('basic_auth_user', env('BASIC_AUTH_USER'))
+    ->set('basic_auth_pass', env('BASIC_AUTH_PASS'))
     ->set('remote_user', 'examplebe')
     ->set('branch', 'staging')
     ->set('deploy_path', '/data/sites/web/examplebe/app/staging');
@@ -49,6 +51,8 @@ host('staging')
 host('acc')
     ->set('hostname', 'ssh###.webhosting.be')
     ->set('url', '')
+    ->set('basic_auth_user', env('BASIC_AUTH_USER'))
+    ->set('basic_auth_pass', env('BASIC_AUTH_PASS'))
     ->set('remote_user', 'examplebe')
     ->set('branch', 'acc')
     ->set('deploy_path', '/data/sites/web/examplebe/app/acc');

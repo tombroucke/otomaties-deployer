@@ -4,48 +4,66 @@ namespace Deployer;
 /** Reload PHP */
 desc('Reload PHP');
 task('combell:reloadPHP', function () {
+    writeln('Waiting for reloadPHP.sh');
+    $timestamp = date('YmdHis');
+    $webRoot = get('web_root');
+    $releasePath = get('release_path');
+    $releaseRevision = get('release_revision');
+    $reloadedFileCheckContent = "{$timestamp} {$releaseRevision}";
+    $reloadedFileCheckPath = "{$releasePath}/{$webRoot}/combell-reloaded-check.txt";
+    
+    run("echo \"{$reloadedFileCheckContent}\" > {$reloadedFileCheckPath}");
+
     sleep(5);
     reloadPhp();
 
-    writeln('Waiting for Combell to reload');
-    $reloadedFileCheckContent = date('YmdHis') . ' ' . get('release_revision');
-    run('echo "' . $reloadedFileCheckContent . '" > {{release_path}}/www/combell-reloaded-check.txt');
-
-    $sleep = 5;
+    // Try to fetch file in curl request
+    $sleep  = 5;
     $checkEvery = 30;
     $limit = 120;
     $iterations = 0;
-    $start = microtime(true);
 
     while (!revisionHasBeenUpdated($reloadedFileCheckContent)) {
         sleep($sleep);
-        $secondsElapsed = $checkEvery * $iterations + $checkEvery;
+        $secondsElapsed = $sleep * $iterations + $sleep;
 
-        if ($checkEvery % $sleep == 0) {
-            writeln('Revision was not found after ' . $secondsElapsed . ' seconds, reloading PHP');
-            reloadPhp();
-        }
-
-        if ($secondsElapsed == $limit) {
+        if ($secondsElapsed >= $limit) {
             writeln('Revision was not found after 120 seconds, continuing');
             break;
         }
+
+        if ($secondsElapsed % $checkEvery == 0) {
+            writeln("Revision was not found after {$secondsElapsed} seconds, reloading PHP");
+            reloadPhp();
+        }
         $iterations++;
     }
-    $timeElapsed = microtime(true) - $start;
-    writeln(sprintf('Combell reloaded after %ss.', $timeElapsed));
-    run('rm {{release_path}}/www/combell-reloaded-check.txt');
+
+    writeln('reloadPHP.sh has finished');
+
+    // Clean up
+    run("rm {$reloadedFileCheckPath}");
 });
 
 /** Reset OPcode cache */
 desc('Reset OPcode cache');
 task('combell:reset_opcode_cache', function () {
     writeln('Writing opcache_reset file');
-    run('echo "<?php opcache_reset();" > {{release_path}}/www/opcache_reset.{{release_revision}}.php');
+    $webRoot = get('web_root');
+    $releasePath = get('release_path');
+    $releaseRevision = get('release_revision');
+    $opCacheResetFilePath = "{$releasePath}/{$webRoot}/opcache_reset.{$releaseRevision}.php";
+
+    run("echo \"<?php opcache_reset();\" > {$opCacheResetFilePath}");
 
     sleep(5);
 
-    fetch(rtrim(get('url'), '/') . '/opcache_reset.' . get('release_revision') . '.php', info: $info);
+    fetch(
+        url('/opcache_reset.' . get('release_revision') . '.php'),
+        'get',
+        requestHeaders(),
+        info: $info
+    );
 
     if ($info['http_code'] === 200) {
         writeln('OPcode cache has been reset');
@@ -53,9 +71,17 @@ task('combell:reset_opcode_cache', function () {
         writeln('Could not reset OPcode cache');
     }
 
+    // Clean up
     writeln('Deleting opcache_reset file');
-    run('rm {{release_path}}/www/opcache_reset.{{release_revision}}.php');
+    run("rm {$opCacheResetFilePath}");
 });
+
+function url($filePath)
+{
+    $url = rtrim(get('url'), '/');
+    $filePath = ltrim($filePath, '/');
+    return "{$url}/{$filePath}";
+}
 
 function reloadPhp()
 {
@@ -64,6 +90,23 @@ function reloadPhp()
 
 function revisionHasBeenUpdated($reloadedFileCheckContent)
 {
-    $reloadedFileContent = fetch(rtrim(get('url'), '/') . '/combell-reloaded-check.txt');
+    $reloadedFileContent = fetch(
+        url('/combell-reloaded-check.txt'),
+        'get',
+        requestHeaders()
+    );
     return strpos($reloadedFileContent, $reloadedFileCheckContent) === 0;
+}
+
+function requestHeaders()
+{
+    $headers = [];
+    $basicAuthUser = get('basic_auth_user');
+    $basicAuthPass = get('basic_auth_pass');
+
+    if ($basicAuthUser && $basicAuthPass) {
+        $base64EncodedString = base64_encode("{$basicAuthUser}:{$basicAuthPass}");
+        $headers['Authorization'] = "Basic {$base64EncodedString}";
+    }
+    return $headers;
 }
