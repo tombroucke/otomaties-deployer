@@ -42,8 +42,8 @@ host('production')
 host('staging')
     ->set('hostname', 'ssh###.webhosting.be')
     ->set('url', '')
-    ->set('basic_auth_user', env('BASIC_AUTH_USER'))
-    ->set('basic_auth_pass', env('BASIC_AUTH_PASS'))
+    ->set('basic_auth_user', $_SERVER['BASIC_AUTH_USER'])
+    ->set('basic_auth_pass', $_SERVER['BASIC_AUTH_PASS'])
     ->set('remote_user', 'examplebe')
     ->set('branch', 'staging')
     ->set('deploy_path', '/data/sites/web/examplebe/app/staging');
@@ -51,8 +51,8 @@ host('staging')
 host('acc')
     ->set('hostname', 'ssh###.webhosting.be')
     ->set('url', '')
-    ->set('basic_auth_user', env('BASIC_AUTH_USER'))
-    ->set('basic_auth_pass', env('BASIC_AUTH_PASS'))
+    ->set('basic_auth_user', $_SERVER['BASIC_AUTH_USER'])
+    ->set('basic_auth_pass', $_SERVER['BASIC_AUTH_PASS'])
     ->set('remote_user', 'examplebe')
     ->set('branch', 'acc')
     ->set('deploy_path', '/data/sites/web/examplebe/app/acc');
@@ -79,7 +79,10 @@ after('deploy:symlink', 'combell:reset_opcode_cache');
 after('deploy:symlink', 'acorn:fetch_google_fonts');
 
 /** Reload cache & preload */
-after('deploy:symlink', 'wp_rocket:init_cache');
+after('deploy:symlink', 'wp_rocket:clear_cache');
+
+/** Reload cache & preload */
+after('deploy:symlink', 'wp_rocket:preload_cache');
 
 /** Remove unused themes */
 after('deploy:cleanup', 'wordpress:cleanup');
