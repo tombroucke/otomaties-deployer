@@ -100,6 +100,11 @@ after('deploy:failed', 'deploy:unlock');
 /** Notify failure */
 after('deploy:failed', 'slack:notify:failure');
 ```
+## WooCommerce
+```php
+/** Update WooCommerce tables */
+after('deploy:symlink', 'woocommerce:update_database');
+```
 
 ## Extra commands
 
