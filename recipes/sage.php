@@ -14,12 +14,12 @@ task('sage:compile', function () {
 });
 
 desc('Updates remote assets with local assets, but without deleting previous assets on destination');
-task('sage:upload_assets_only', function () {
-    upload('{{sage/theme_path}}/public', '{{release_path}}/{{sage/theme_path}}');
+task('sage:upload_assets', function () {
+    upload('{{sage/theme_path}}/{{sage/public_dir}}', '{{release_path}}/{{sage/theme_path}}');
 });
 
-desc('Builds assets and uploads them on remote server');
-task('push:assets', [
+desc('Builds assets and uploads them to remote server');
+task('sage:compile_and_upload_assets', [
     'sage:compile',
-    'sage:upload_assets_only',
+    'sage:upload_assets',
 ]);

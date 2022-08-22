@@ -18,12 +18,16 @@ $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 require 'vendor/tombroucke/otomaties-deployer/deploy.php';
+require 'vendor/tombroucke/otomaties-deployer/recipes/acorn.php';
+require 'vendor/tombroucke/otomaties-deployer/recipes/auth.php';
+require 'vendor/tombroucke/otomaties-deployer/recipes/bedrock.php';
 require 'vendor/tombroucke/otomaties-deployer/recipes/cleanup.php';
 require 'vendor/tombroucke/otomaties-deployer/recipes/combell.php';
-require 'vendor/tombroucke/otomaties-deployer/recipes/google-fonts.php';
-require 'vendor/tombroucke/otomaties-deployer/recipes/revision.php';
+require 'vendor/tombroucke/otomaties-deployer/recipes/composer.php';
+require 'vendor/tombroucke/otomaties-deployer/recipes/otomaties.php';
 require 'vendor/tombroucke/otomaties-deployer/recipes/sage.php';
 require 'vendor/tombroucke/otomaties-deployer/recipes/wp-rocket.php';
+
 
 /** Config */
 set('application', '');
@@ -64,7 +68,7 @@ before('deploy', 'slack:notify');
 after('deploy:vendors', 'sage:vendors');
 
 /** Push theme assets */
-after('deploy:update_code', 'push:assets');
+after('deploy:update_code', 'sage:compile_and_upload_assets');
 
 /** Write revision to file */
 after('deploy:update_code', 'otomaties:write_revision_to_file');
@@ -85,7 +89,7 @@ after('deploy:symlink', 'wp_rocket:clear_cache');
 after('deploy:symlink', 'wp_rocket:preload_cache');
 
 /** Remove unused themes */
-after('deploy:cleanup', 'wordpress:cleanup');
+after('deploy:cleanup', 'cleanup:unused_themes');
 
 /** Notify success */
 after('deploy:success', 'slack:notify:success');
@@ -95,4 +99,25 @@ after('deploy:failed', 'deploy:unlock');
 
 /** Notify failure */
 after('deploy:failed', 'slack:notify:failure');
+```
+
+## Extra commands
+
+### Enable basic auth on host:
+
+```bash
+dep auth:password_protect_stage staging
+```
+
+### Create bedrock .env file
+
+```bash
+dep bedrock:create_env staging
+```
+
+### Add repository authentication to remote server
+
+
+```bash
+dep composer:add_remote_repository_authentication
 ```
