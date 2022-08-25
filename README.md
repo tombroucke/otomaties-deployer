@@ -26,6 +26,7 @@ require 'vendor/tombroucke/otomaties-deployer/recipes/combell.php';
 require 'vendor/tombroucke/otomaties-deployer/recipes/composer.php';
 require 'vendor/tombroucke/otomaties-deployer/recipes/otomaties.php';
 require 'vendor/tombroucke/otomaties-deployer/recipes/sage.php';
+require 'vendor/tombroucke/otomaties-deployer/recipes/wordfence.php';
 require 'vendor/tombroucke/otomaties-deployer/recipes/wp-rocket.php';
 
 
@@ -125,4 +126,11 @@ dep bedrock:create_env staging
 
 ```bash
 dep composer:add_remote_repository_authentication
+```
+
+### Setup Wordfence firewall for Bedrock / deployer
+
+
+```bash
+dep wordfence:firewall_setup
 ```

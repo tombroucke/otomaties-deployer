@@ -18,7 +18,6 @@ add('shared_files', [
     get('web_root') . '/.user.ini',
     get('web_root') . '/app/object-cache.php',
     get('web_root') . '/app/wp-cache-config.php',
-    get('web_root') . '/wordfence-waf.php',
 ]);
 
 /** Shared directories */
