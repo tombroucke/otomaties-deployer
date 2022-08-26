@@ -48,7 +48,7 @@ task('combell:reloadPHP', function () {
 /** Reset OPcode cache */
 desc('Reset OPcode cache');
 task('combell:reset_opcode_cache', function () {
-    writeln('Writing opcache_reset file');
+    writeln('Clearing opcache');
     $webRoot = get('web_root');
     $releasePath = get('release_path');
     $releaseRevision = get('release_revision');
@@ -56,23 +56,19 @@ task('combell:reset_opcode_cache', function () {
 
     run("echo \"<?php opcache_reset();\" > {$opCacheResetFilePath}");
 
-    sleep(5);
+    $iterations = 0;
+    while (!opcodeCacheHasBeenReset()) {
+        $seconds = 5*++$iterations;
+        sleep($seconds); // 5, 10, 15, 20, 25
+        if ($iterations == 5) {
+            writeln('Could not clear opcache after 5 iterations.');
+            break;
+        }
 
-    fetch(
-        url('/opcache_reset.' . get('release_revision') . '.php'),
-        'get',
-        requestHeaders(),
-        info: $info
-    );
-
-    if ($info['http_code'] === 200) {
-        writeln('OPcode cache has been reset');
-    } else {
-        writeln('Could not reset OPcode cache');
+        writeln('Could not clear opcache, retrying.');
     }
 
     // Clean up
-    writeln('Deleting opcache_reset file');
     run("rm {$opCacheResetFilePath}");
 });
 
@@ -96,6 +92,17 @@ function revisionHasBeenUpdated($reloadedFileCheckContent)
         requestHeaders()
     );
     return strpos($reloadedFileContent, $reloadedFileCheckContent) === 0;
+}
+
+function opcodeCacheHasBeenReset()
+{
+    fetch(
+        url('/opcache_reset.' . get('release_revision') . '.php'),
+        'get',
+        requestHeaders(),
+        info: $info
+    );
+    return $info['http_code'] === 200;
 }
 
 function requestHeaders()
