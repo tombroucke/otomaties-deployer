@@ -108,6 +108,12 @@ after('deploy:failed', 'slack:notify:failure');
 after('deploy:symlink', 'woocommerce:update_database');
 ```
 
+## WordPress cache
+```php
+/** Update WooCommerce tables */
+after('deploy:symlink', 'wordpress:clear_cache');
+```
+
 ## Extra commands
 
 ### Enable basic auth on host:
