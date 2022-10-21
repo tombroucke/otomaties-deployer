@@ -4,16 +4,16 @@ namespace Deployer;
 desc('Set up Wordfence firewall in bedrock / deployer installation');
 task('wordfence:firewall_setup', function () {
     $deployPath = get('deploy_path');
-    $sharedPath = $deployPath . '/shared';
-    $userIniFilePath = $sharedPath . '/www/.user.ini';
-    $wordfenceWafFilePath = $sharedPath . '/www/wordfence-waf.php';
+    $sharedWwwPath = $deployPath . '/shared/www';
+    $userIniFilePath = $sharedWwwPath . '/.user.ini';
+    $wordfenceWafFilePath = $sharedWwwPath . '/wordfence-waf.php';
 
     // Create .user.ini file
-    run("touch ${userIniFilePath}");
+    run("mkdir -p ${sharedWwwPath}/ && touch ${userIniFilePath}");
     ob_start();
     echo <<<EOL
         ; Wordfence WAF
-        auto_prepend_file = '${sharedPath}/www/wordfence-waf.php'
+        auto_prepend_file = '${sharedWwwPath}/wordfence-waf.php'
         ; END Wordfence WAF
         EOL;
     
