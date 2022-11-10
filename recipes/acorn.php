@@ -8,7 +8,7 @@ task('acorn:fetch_google_fonts', function () {
         '{{release_path}}',
         function () {
             if (! test('wp cli has-command acorn')) {
-                writeln('<comment>Aborted: Unable to fetch google fonts, wp acorn is not a registered command</comment>');
+                writeln('<comment>Aborted: Unable to fetch google fonts, wp acorn is not a registered command</comment>'); // phpcs:ignore:Generic.Files.LineLength
                 return;
             }
 
@@ -21,4 +21,3 @@ task('acorn:fetch_google_fonts', function () {
         }
     );
 });
-

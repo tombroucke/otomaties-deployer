@@ -86,23 +86,33 @@ function reloadPhp()
 
 function revisionHasBeenUpdated($reloadedFileCheckContent)
 {
-    $reloadedFileContent = fetch(
-        url('/combell-reloaded-check.txt'),
-        'get',
-        requestHeaders()
-    );
-    return strpos($reloadedFileContent, $reloadedFileCheckContent) === 0;
+    try {
+        $reloadedFileContent = fetch(
+            url('/combell-reloaded-check.txt'),
+            'get',
+            requestHeaders()
+        );
+        return strpos($reloadedFileContent, $reloadedFileCheckContent) === 0;
+    } catch (\Throwable $th) {
+        writeln($th->getMessage());
+        return false;
+    }
 }
 
 function opcodeCacheHasBeenReset()
 {
-    fetch(
-        url('/opcache_reset.' . get('release_revision') . '.php'),
-        'get',
-        requestHeaders(),
-        info: $info
-    );
-    return $info['http_code'] === 200;
+    try {
+        fetch(
+            url('/opcache_reset.' . get('release_revision') . '.php'),
+            'get',
+            requestHeaders(),
+            info: $info
+        );
+        return $info['http_code'] === 200;
+    } catch (\Throwable $th) {
+        writeln($th->getMessage());
+        return false;
+    }
 }
 
 function requestHeaders()
