@@ -35,7 +35,8 @@ require 'vendor/tombroucke/otomaties-deployer/recipes/wp-rocket.php';
 set('application', '');
 set('repository', '');
 set('sage/theme_path', get('web_root') . '/app/themes/themename');
-set('sage/build_command', 'build --clean'); // build --clean for bud, build:production for mix
+set('sage/build_command', 'build --clean'); // build --clean for bud, build:production for webpack mix
+set('sage/public_dir', 'public'); // public for bud, dist for webpack mix
 
 /** Hosts */
 host('production')
