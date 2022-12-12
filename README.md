@@ -49,20 +49,11 @@ host('production')
 host('staging')
     ->set('hostname', 'ssh###.webhosting.be')
     ->set('url', '')
-    ->set('basic_auth_user', $_SERVER['BASIC_AUTH_USER'])
-    ->set('basic_auth_pass', $_SERVER['BASIC_AUTH_PASS'])
+    ->set('basic_auth_user', $_SERVER['BASIC_AUTH_USER'] ?? '')
+    ->set('basic_auth_pass', $_SERVER['BASIC_AUTH_PASS'] ?? '')
     ->set('remote_user', 'examplebe')
     ->set('branch', 'staging')
     ->set('deploy_path', '/data/sites/web/examplebe/app/staging');
-
-host('acc')
-    ->set('hostname', 'ssh###.webhosting.be')
-    ->set('url', '')
-    ->set('basic_auth_user', $_SERVER['BASIC_AUTH_USER'])
-    ->set('basic_auth_pass', $_SERVER['BASIC_AUTH_PASS'])
-    ->set('remote_user', 'examplebe')
-    ->set('branch', 'acc')
-    ->set('deploy_path', '/data/sites/web/examplebe/app/acc');
 
 /** Notify deploy started */
 before('deploy', 'slack:notify');
