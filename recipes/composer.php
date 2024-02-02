@@ -13,8 +13,8 @@ task('composer:add_remote_repository_authentication', function () {
                 $username = ask('username for ' . $host);
                 $password = askHiddenResponse('password for ' . $host);
 
-                run("composer config -a -g http-basic.${host} \
-                ${username} ${password}");
+                run("composer config -a -g http-basic.{$host} \
+                {$username} {$password}");
             }
         }
     }

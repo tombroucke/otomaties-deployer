@@ -12,8 +12,8 @@ task('bedrock:create_env', function () {
     }
 
     $deployPath = get('deploy_path');
-    if (!test("[ -f ${deployPath}/shared/.env ]")) {
-        run("mkdir -p ${deployPath}/shared/ && touch ${deployPath}/shared/.env");
+    if (!test("[ -f {$deployPath}/shared/.env ]")) {
+        run("mkdir -p {$deployPath}/shared/ && touch {$deployPath}/shared/.env");
 
         // Keys that require a salt token
         $salt_keys = [
@@ -73,7 +73,7 @@ task('bedrock:create_env', function () {
     
         $content = ob_get_clean();
     
-        run("echo \"${content}\" > ${deployPath}/shared/.env");
+        run("echo \"{$content}\" > {$deployPath}/shared/.env");
     } else {
         writeln('<comment>.env file already exists</comment>');
     }
