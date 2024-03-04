@@ -73,8 +73,8 @@ after('deploy:symlink', 'combell:reloadPHP');
 /** Clear OPcode cache */
 after('deploy:symlink', 'combell:reset_opcode_cache');
 
-/** Fetch Google fonts */
-after('deploy:symlink', 'acorn:fetch_google_fonts');
+/** Cache ACF fields */
+after('deploy:symlink', 'acorn:acf_cache');
 
 /** Reload cache & preload */
 after('deploy:symlink', 'wp_rocket:clear_cache');
