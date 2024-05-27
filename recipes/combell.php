@@ -81,7 +81,7 @@ function url($filePath)
 
 function reloadPhp()
 {
-    run('reloadPHP.sh');
+    return run('reloadPHP.sh');
 }
 
 function revisionHasBeenUpdated($reloadedFileCheckContent)

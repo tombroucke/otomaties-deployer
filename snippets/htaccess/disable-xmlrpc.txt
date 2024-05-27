@@ -1,0 +1,6 @@
+# BEGIN block XML-RPC requests
+<Files xmlrpc.php>
+order deny,allow
+deny from all
+</Files>
+# END block XML-RPC requests

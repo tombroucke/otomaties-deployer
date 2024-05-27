@@ -1,0 +1,23 @@
+# BEGIN Block direct access to sensitive files
+<FilesMatch "^.*(error_log|wp-config\.php|php.ini|\.[hH][tT][aApP].*)$">
+	Order deny,allow
+	Deny from all
+</FilesMatch>
+
+# Block direct access to other files
+<FilesMatch "(\.(tar|gz|bak|config|ico|dist|fla|inc|ini|log|psd|sh|sql|swp|old)|~)$">
+	Order deny,allow
+	Deny from all
+</FilesMatch>
+
+# Block direct access to wp-includes
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^wp-admin/includes/ - [F,L]
+RewriteRule !^wp-includes/ - [S=3]
+RewriteRule ^wp-includes/[^/]+\.php$ - [F,L]
+RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]
+RewriteRule ^wp-includes/theme-compat/ - [F,L]
+</IfModule>
+# END Block direct access to sensitive files

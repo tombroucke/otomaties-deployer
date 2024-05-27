@@ -35,7 +35,7 @@ require 'vendor/tombroucke/otomaties-deployer/recipes/wp-rocket.php';
 set('application', '');
 set('repository', '');
 set('sage/theme_path', get('web_root') . '/app/themes/themename');
-set('sage/build_command', 'build --clean'); // build --clean for bud, build:production for webpack mix
+set('sage/build_command', 'build --clean --flush'); // build --clean for bud, build:production for webpack mix
 set('sage/public_dir', 'public'); // public for bud, dist for webpack mix
 
 /** Hosts */
@@ -132,4 +132,18 @@ dep composer:add_remote_repository_authentication
 
 ```bash
 dep wordfence:firewall_setup
+```
+
+### Add .htaccess rules for security
+
+
+```bash
+dep otomaties:htaccess_rules
+
+```
+### Set default Wordfence configuration
+
+
+```bash
+dep wordfence:default_configuration
 ```

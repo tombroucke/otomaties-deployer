@@ -5,10 +5,7 @@ desc('Password protect stage');
 task('auth:password_protect_stage', function () {
     $deployPath = get('deploy_path');
 
-    // Create htpassword file
-    if (!test("[ -f {$deployPath}/shared/www/.htpasswd ]")) {
-        run("mkdir -p {$deployPath}/shared/www/ && touch {$deployPath}/shared/www/.htpasswd");
-    }
+    createFileIfNotExists("{$deployPath}/shared/www/.htpasswd");
 
     $username = ask('username', get('basic_auth_user'));
     $password = ask('password', get('basic_auth_pass'));
@@ -26,9 +23,7 @@ task('auth:password_protect_stage', function () {
 
     // Create htaccess file
     if (!test("grep -q AuthUserFile {$deployPath}/shared/www/.htaccess")) {
-        if (!test("[ -f {$deployPath}/shared/www/.htaccess ]")) {
-            run("touch {$deployPath}/shared/www/.htaccess");
-        }
+        createFileIfNotExists("{$deployPath}/shared/www/.htaccess");
         
         // Add htaccess rules
         ob_start();

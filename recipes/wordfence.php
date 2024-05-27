@@ -38,3 +38,40 @@ task('wordfence:firewall_setup', function () {
 
     run("echo \"{$content}\" > {$wordfenceWafFilePath}");
 });
+
+desc('Wordfence default configuration');
+task('wordfence:default_configuration', function () {
+    runWpQuery('activity-report');
+    runWpQuery('banned-urls');
+    runWpQuery('display');
+    runWpQuery('email-alert-preferences');
+    runWpQuery('general');
+    runWpQuery('loginsec');
+    runWpQuery('notifications');
+    runWpQuery('scan');
+});
+
+function runWpQuery($filename) {
+    $deployPath = get('deploy_path');
+    $query = file_get_contents(dirname(__DIR__) . '/snippets/wordfence/' . $filename . '.sql');
+
+    // Extracting placeholders and default values
+    preg_match_all('/{{\s(.*?)(?::(.*?))?\s}}/', $query, $matches, PREG_SET_ORDER);
+
+    $url = parse_url(get('url'), PHP_URL_HOST);
+    $defaults = [
+        'domain' => preg_replace('/\.[^.]*$/', '', $url),
+        'domain_extension' => $url,
+    ];
+    
+    foreach($matches as $match) {
+        $replace = $match[0];
+        $key = $match[1];
+        $defaultValue = $match[2] ?? $defaults[$key] ?? '';
+        $value = ask("Enter a value for {$key} (default: {$defaultValue})", $defaultValue);
+        $query = str_replace($replace, $value, $query);        
+    }
+
+    $query = trim(str_replace("'", "\"", $query));
+    return run("wp db query '{$query}' --path={$deployPath}/current/www/wp");
+}

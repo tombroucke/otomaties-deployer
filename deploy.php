@@ -33,3 +33,14 @@ add('shared_dirs', [
 
 /** Writable directories */
 add('writable_dirs', []);
+
+function createFileIfNotExists($path) : bool
+{
+    if (!test("[ -f {$path} ]")) {
+        run("mkdir -p $(dirname {$path})");
+        run("touch {$path}");
+        return true;
+    }
+    
+    return false;
+}
