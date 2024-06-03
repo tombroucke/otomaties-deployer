@@ -11,3 +11,8 @@ task('wordpress:clear_cache', function () {
         }
     );
 });
+
+desc('Set administration email address');
+task('wordpress:set_admin_email', function () {
+    runWpQuery('wordpress/admin-email');
+});

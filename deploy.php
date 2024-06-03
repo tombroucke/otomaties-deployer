@@ -1,8 +1,14 @@
 <?php
 namespace Deployer;
 
-require 'recipe/composer.php';
-require 'contrib/slack.php';
+require_once 'recipe/composer.php';
+require_once 'contrib/slack.php';
+require_once 'functions.php';
+
+// require all files in recipes
+foreach (glob(__DIR__ . '/recipes/*.php') as $filename) {
+    require_once $filename;
+}
 
 /** Config */
 set('keep_releases', 3);
@@ -33,14 +39,3 @@ add('shared_dirs', [
 
 /** Writable directories */
 add('writable_dirs', []);
-
-function createFileIfNotExists($path) : bool
-{
-    if (!test("[ -f {$path} ]")) {
-        run("mkdir -p $(dirname {$path})");
-        run("touch {$path}");
-        return true;
-    }
-    
-    return false;
-}
