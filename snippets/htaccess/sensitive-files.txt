@@ -5,7 +5,7 @@
 </FilesMatch>
 
 # Block direct access to other files
-<FilesMatch "(\.(tar|gz|bak|config|ico|dist|fla|inc|ini|log|psd|sh|sql|swp|old)|~)$">
+<FilesMatch "^(?!favicon\.ico$).*\.(tar|gz|bak|config|ico|dist|fla|inc|ini|log|psd|sh|sql|swp|old|~)$">
 	Order deny,allow
 	Deny from all
 </FilesMatch>
