@@ -1,4 +1,4 @@
-INSERT INTO `wp_wfconfig` (`name`, `val`, `autoload`)
+INSERT INTO `{{ db_prefix }}wfconfig` (`name`, `val`, `autoload`)
 VALUES 
 	('scansEnabled_checkGSB', '1', 'yes'),
 	('scansEnabled_checkHowGetIPs', '1', 'yes'),

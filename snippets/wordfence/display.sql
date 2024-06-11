@@ -1,4 +1,4 @@
-INSERT INTO `wp_wfconfig` (`name`, `val`, `autoload`)
+INSERT INTO `{{ db_prefix }}wfconfig` (`name`, `val`, `autoload`)
 VALUES
 	('displayAutomaticBlocks', '1', 'yes'),
 	('displayTopLevelBlocking', '1', 'yes'),

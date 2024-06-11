@@ -1,4 +1,4 @@
-INSERT INTO `wp_wfconfig` (`name`, `val`, `autoload`)
+INSERT INTO `{{ db_prefix }}wfconfig` (`name`, `val`, `autoload`)
 VALUES
 	('alertEmails', '{{ alert_email:tom@tombroucke.be }}', 'yes'),
 	('alertOn_adminLogin', '0', 'yes'),

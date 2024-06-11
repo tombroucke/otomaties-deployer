@@ -1,4 +1,4 @@
-INSERT INTO `wp_wfconfig` (`name`, `val`, `autoload`) VALUES
+INSERT INTO `{{ db_prefix }}wfconfig` (`name`, `val`, `autoload`) VALUES
 	('other_hideWPVersion', '1', 'yes'),
 	('disableCodeExecutionUploads', '1', 'yes'),
 	('disableCodeExecutionUploadsPHP7Migrated', '1', 'yes'),

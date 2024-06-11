@@ -21,7 +21,7 @@ function runWpQuery($filename) {
 
     $url = parse_url(get('url'), PHP_URL_HOST);
     $defaults = [
-        'domain' => preg_replace('/\.[^.]*$/', '', $url),
+        'domain_no_extension' => preg_replace('/\.[^.]*$/', '', $url),
         'domain_extension' => $url,
     ];
     
@@ -29,7 +29,11 @@ function runWpQuery($filename) {
         $replace = $match[0];
         $key = $match[1];
         $defaultValue = $match[2] ?? $defaults[$key] ?? '';
-        $value = ask("Enter a value for {$key} (default: {$defaultValue})", $defaultValue);
+        if (get($key) && get($key) !== '') {
+            $value = get($key);
+        } else {
+            $value = ask("Enter a value for {$key}", $defaultValue);
+        }
         $query = str_replace($replace, $value, $query);        
     }
 

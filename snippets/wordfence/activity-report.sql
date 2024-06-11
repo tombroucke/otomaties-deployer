@@ -1,4 +1,4 @@
-INSERT INTO `wp_wfconfig` (`name`, `val`, `autoload`)
+INSERT INTO `{{ db_prefix }}wfconfig` (`name`, `val`, `autoload`)
 VALUES
 	('email_summary_dashboard_widget_enabled', '0', 'yes'),
 	('email_summary_enabled', '', 'yes')

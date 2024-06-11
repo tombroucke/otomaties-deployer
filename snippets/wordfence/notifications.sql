@@ -1,4 +1,4 @@
-INSERT INTO `wp_wfconfig` (`name`, `val`, `autoload`)
+INSERT INTO `{{ db_prefix }}wfconfig` (`name`, `val`, `autoload`)
 VALUES
 	('notification_blogHighlights', '0', 'yes'),
 	('notification_productUpdates', '0', 'yes'),
