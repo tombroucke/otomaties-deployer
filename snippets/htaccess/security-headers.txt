@@ -6,7 +6,7 @@ Header set X-Content-Type-Options nosniff
 Header always append Content-Security-Policy "frame-ancestors 'self' https://tombroucke.be;"
 Header always set Strict-Transport-Security max-age=31536000
 Header always set Referrer-Policy "no-referrer-when-downgrade"
-Header set Content-Security-Policy "default-src 'self'; img-src 'self' data: http: https: *.gravatar.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: googletagmanager.com fontawesome.com kit.fontawesome.com use.fontawesome.com; style-src 'self' 'unsafe-inline' http: https: fonts.googleapis.com *.fontawesome.com; font-src 'self' data: http: https: fonts.googleapis.com themes.googleusercontent.com *.fontawesome.com; connect-src https: *.fontawesome.com; frame-src https: youtube-nocookie.com"
+Header set Content-Security-Policy "default-src 'self'; img-src 'self' data: blob: http: https: *.gravatar.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https: googletagmanager.com fontawesome.com kit.fontawesome.com use.fontawesome.com; style-src 'self' 'unsafe-inline' http: https: fonts.googleapis.com *.fontawesome.com; font-src 'self' data: http: https: fonts.googleapis.com themes.googleusercontent.com *.fontawesome.com; connect-src https: *.fontawesome.com; frame-src 'self' blob: https: youtube-nocookie.com"
 Header always set Permissions-Policy "geolocation=(), midi=(),sync-xhr=(),accelerometer=(), gyroscope=(), magnetometer=(), camera=(), fullscreen=(self)"
 </IfModule>
 # END security headers
