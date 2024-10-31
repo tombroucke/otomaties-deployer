@@ -13,38 +13,34 @@ foreach (glob(__DIR__ . '/recipes/*.php') as $filename) {
 /** Config */
 set('keep_releases', 3);
 set('slack_success_text', 'Deploy to *{{target}}* successful. Visit {{url}}/wp/wp-admin.');
+set('basic_auth_user', '');
+set('basic_auth_pass', '');
 
-if (!has('web_root')) {
-    set('web_root', 'www');
-}
+set('web_root', 'www');
+set('sage/public_dir', 'public');
+set('db_prefix', 'wp_');
 
-if (!has('sage/public_dir')) {
-    set('sage/public_dir', 'public');
-}
-
-if (!has('db_prefix')) {
-    set('db_prefix', 'wp_');
-}
+set('cachetool_args', '--web=SymfonyHttpClient --web-path=./{{web_root}} --web-url={{url}} --web-basic-auth="{{basic_auth_user}}:{{basic_auth_pass}}"');
 
 /** Shared files */
 add('shared_files', [
     '.env',
-    get('web_root') . '/.htaccess',
-    get('web_root') . '/.htpasswd',
-    get('web_root') . '/.user.ini',
-    get('web_root') . '/app/object-cache.php',
-    get('web_root') . '/app/wp-cache-config.php',
+    '{{ web_root }}/.htaccess',
+    '{{ web_root }}/.htpasswd',
+    '{{ web_root }}/.user.ini',
+    '{{ web_root }}/app/object-cache.php',
+    '{{ web_root }}/app/wp-cache-config.php',
 ]);
 
 /** Shared directories */
 add('shared_dirs', [
-    get('web_root') . '/app/blogs.dir',
-    get('web_root') . '/app/ewww',
-    get('web_root') . '/app/fonts',
-    get('web_root') . '/app/languages/wpml',
-    get('web_root') . '/app/uploads',
-    get('web_root') . '/app/wflogs',
-    get('web_root') . '/app/wp-rocket-config',
+    '{{ web_root }}/app/blogs.dir',
+    '{{ web_root }}/app/ewww',
+    '{{ web_root }}/app/fonts',
+    '{{ web_root }}/app/languages/wpml',
+    '{{ web_root }}/app/uploads',
+    '{{ web_root }}/app/wflogs',
+    '{{ web_root }}/app/wp-rocket-config',
 ]);
 
 /** Writable directories */
