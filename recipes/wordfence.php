@@ -4,16 +4,18 @@ namespace Deployer;
 desc('Set up Wordfence firewall in bedrock / deployer installation');
 task('wordfence:firewall_setup', function () {
     $deployPath = get('deploy_path');
-    $sharedWwwPath = $deployPath . '/shared/www';
-    $userIniFilePath = $sharedWwwPath . '/.user.ini';
-    $wordfenceWafFilePath = $sharedWwwPath . '/wordfence-waf.php';
+    $webRoot = get('web_root');
+
+    $sharedWebrootPath = $deployPath . "/shared/{$webRoot}";
+    $userIniFilePath = $sharedWebrootPath . '/.user.ini';
+    $wordfenceWafFilePath = $sharedWebrootPath . '/wordfence-waf.php';
 
     // Create .user.ini file
-    run("mkdir -p {$sharedWwwPath}/ && touch {$userIniFilePath}");
+    run("mkdir -p {$sharedWebrootPath}/ && touch {$userIniFilePath}");
     ob_start();
     echo <<<EOL
         ; Wordfence WAF
-        auto_prepend_file = '{$sharedWwwPath}/wordfence-waf.php'
+        auto_prepend_file = '{$sharedWebrootPath}/wordfence-waf.php'
         ; END Wordfence WAF
         EOL;
     
@@ -28,9 +30,9 @@ task('wordfence:firewall_setup', function () {
         <?php
         // Before removing this file, please verify the PHP ini setting `auto_prepend_file` does not point to this.
 
-        if (file_exists('{$deployPath}/current/www/app/plugins/wordfence/waf/bootstrap.php')) {
-            define('WFWAF_LOG_PATH', '{$deployPath}/current/www/app/wflogs/');
-            include_once '{$deployPath}/current/www/app/plugins/wordfence/waf/bootstrap.php';
+        if (file_exists('{$deployPath}/current/{$webRoot}/app/plugins/wordfence/waf/bootstrap.php')) {
+            define('WFWAF_LOG_PATH', '{$deployPath}/current/{$webRoot}/app/wflogs/');
+            include_once '{$deployPath}/current/{$webRoot}/app/plugins/wordfence/waf/bootstrap.php';
         }
         EOL;
     

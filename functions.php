@@ -14,6 +14,8 @@ function createFileIfNotExists($path) : bool
 
 function runWpQuery($filename) {
     $deployPath = get('deploy_path');
+    $webRoot = get('web_root');
+    
     $query = file_get_contents(__DIR__ . '/snippets/' . ltrim($filename, '/') . '.sql');
 
     // Extracting placeholders and default values
@@ -38,5 +40,18 @@ function runWpQuery($filename) {
     }
 
     $query = trim(str_replace("'", "\"", $query));
-    return run("wp db query '{$query}' --path={$deployPath}/current/www/wp");
+    return run("wp db query '{$query}' --path={$deployPath}/current/{$webRoot}/wp");
+}
+
+function requestHeaders()
+{
+    $headers = [];
+    $basicAuthUser = get('basic_auth_user');
+    $basicAuthPass = get('basic_auth_pass');
+
+    if ($basicAuthUser && $basicAuthPass) {
+        $base64EncodedString = base64_encode("{$basicAuthUser}:{$basicAuthPass}");
+        $headers['Authorization'] = "Basic {$base64EncodedString}";
+    }
+    return $headers;
 }

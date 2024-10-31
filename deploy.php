@@ -13,9 +13,18 @@ foreach (glob(__DIR__ . '/recipes/*.php') as $filename) {
 /** Config */
 set('keep_releases', 3);
 set('slack_success_text', 'Deploy to *{{target}}* successful. Visit {{url}}/wp/wp-admin.');
-set('web_root', 'www');
-set('sage/public_dir', 'public');
-set('db_prefix', 'wp_');
+
+if (!has('web_root')) {
+    set('web_root', 'www');
+}
+
+if (!has('sage/public_dir')) {
+    set('sage/public_dir', 'public');
+}
+
+if (!has('db_prefix')) {
+    set('db_prefix', 'wp_');
+}
 
 /** Shared files */
 add('shared_files', [
