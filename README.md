@@ -13,6 +13,7 @@ composer require tombroucke/otomaties-deployer --dev
 namespace Deployer;
 
 require_once __DIR__ . '/vendor/autoload.php';
+require 'contrib/cachetool.php';
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
@@ -32,11 +33,11 @@ require 'vendor/tombroucke/otomaties-deployer/recipes/wp-rocket.php';
 
 
 /** Config */
+set('web_root', 'web');
 set('application', '');
 set('repository', '');
 set('sage/theme_path', get('web_root') . '/app/themes/themename');
-set('sage/build_command', 'build --clean --flush'); // build --clean for bud, build:production for webpack mix
-set('sage/public_dir', 'public'); // public for bud, dist for webpack mix
+set('sage/build_command', 'build --clean --flush'); // build --clean for bud, build:production for mix
 
 /** Hosts */
 host('production')
@@ -55,9 +56,6 @@ host('staging')
     ->set('branch', 'staging')
     ->set('deploy_path', '/data/sites/web/examplebe/app/staging');
 
-/** Notify deploy started */
-before('deploy', 'slack:notify');
-
 /** Install theme dependencies */
 after('deploy:vendors', 'sage:vendors');
 
@@ -71,7 +69,7 @@ after('deploy:update_code', 'otomaties:write_revision_to_file');
 after('deploy:symlink', 'combell:reloadPHP');
 
 /** Clear OPcode cache */
-after('deploy:symlink', 'combell:reset_opcode_cache');
+after('deploy:symlink', 'cachetool:clear:opcache');
 
 /** Cache ACF fields */
 after('deploy:symlink', 'acorn:acf_cache');
@@ -85,14 +83,8 @@ after('deploy:symlink', 'wp_rocket:preload_cache');
 /** Remove unused themes */
 after('deploy:cleanup', 'cleanup:unused_themes');
 
-/** Notify success */
-after('deploy:success', 'slack:notify:success');
-
 /** Unlock deploy */
 after('deploy:failed', 'deploy:unlock');
-
-/** Notify failure */
-after('deploy:failed', 'slack:notify:failure');
 ```
 ## WooCommerce
 ```php
