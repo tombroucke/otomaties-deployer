@@ -45,6 +45,33 @@ task('combell:reloadPHP', function () {
     run("rm {$reloadedFileCheckPath}");
 });
 
+/** Reset OPcode cache */
+desc('Reset OPcode cache');
+task('combell:reset_opcode_cache', function () {
+    writeln('Clearing opcache');
+    $webRoot = get('web_root');
+    $releasePath = get('release_path');
+    $releaseRevision = get('release_revision');
+    $opCacheResetFilePath = "{$releasePath}/{$webRoot}/opcache_reset.{$releaseRevision}.php";
+
+    run("echo \"<?php opcache_reset();\" > {$opCacheResetFilePath}");
+
+    $iterations = 0;
+    while (!opcodeCacheHasBeenReset()) {
+        $seconds = 5*++$iterations;
+        sleep($seconds); // 5, 10, 15, 20, 25
+        if ($iterations == 5) {
+            writeln('Could not clear opcache after 5 iterations.');
+            break;
+        }
+
+        writeln('Could not clear opcache, retrying.');
+    }
+
+    // Clean up
+    run("rm {$opCacheResetFilePath}");
+});
+
 function url($filePath)
 {
     $url = rtrim(get('url'), '/');
