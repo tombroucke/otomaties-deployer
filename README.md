@@ -19,18 +19,6 @@ $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 require 'vendor/tombroucke/otomaties-deployer/deploy.php';
-require 'vendor/tombroucke/otomaties-deployer/recipes/acorn.php';
-require 'vendor/tombroucke/otomaties-deployer/recipes/auth.php';
-require 'vendor/tombroucke/otomaties-deployer/recipes/bedrock.php';
-require 'vendor/tombroucke/otomaties-deployer/recipes/cleanup.php';
-require 'vendor/tombroucke/otomaties-deployer/recipes/combell.php';
-require 'vendor/tombroucke/otomaties-deployer/recipes/composer.php';
-require 'vendor/tombroucke/otomaties-deployer/recipes/otomaties.php';
-require 'vendor/tombroucke/otomaties-deployer/recipes/sage.php';
-require 'vendor/tombroucke/otomaties-deployer/recipes/woocommerce.php';
-require 'vendor/tombroucke/otomaties-deployer/recipes/wordfence.php';
-require 'vendor/tombroucke/otomaties-deployer/recipes/wp-rocket.php';
-
 
 /** Config */
 set('web_root', 'web');
