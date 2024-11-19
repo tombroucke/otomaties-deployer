@@ -79,6 +79,15 @@ task('bedrock:create_env', function () {
     }
 });
 
+desc('Upload auth.json to remote');
+task('bedrock:upload_auth_json', function () {
+    $authJsonPath = 'auth.json';
+
+    if (file_exists($authJsonPath)) {
+        upload($authJsonPath, '{{release_path}}/auth.json');
+    }
+});
+
 function generate_salt()
 {
     $chars              = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%^&*()-_[]{}<>~+=,.;:/?|';

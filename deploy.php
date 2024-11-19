@@ -45,3 +45,6 @@ add('shared_dirs', [
 
 /** Writable directories */
 add('writable_dirs', []);
+
+/** Copy auth.json */
+before('deploy:vendors', 'bedrock:upload_auth_json');
