@@ -48,3 +48,6 @@ add('writable_dirs', []);
 
 /** Copy auth.json */
 before('deploy:vendors', 'bedrock:upload_auth_json');
+
+/** Remove auth.json */
+after('deploy:vendors', 'bedrock:remove_auth_json');

@@ -88,6 +88,11 @@ task('bedrock:upload_auth_json', function () {
     }
 });
 
+desc('Remove auth.json from remote');
+task('bedrock:remove_auth_json', function () {
+    run("rm {{release_path}}/auth.json");
+});
+
 function generate_salt()
 {
     $chars              = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%^&*()-_[]{}<>~+=,.;:/?|';
