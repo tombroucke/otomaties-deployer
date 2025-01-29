@@ -55,3 +55,10 @@ function requestHeaders()
     }
     return $headers;
 }
+
+function suggestedLocalUrl()
+{
+    $url = get('url');
+    $extension = pathinfo($url, PATHINFO_EXTENSION);
+    return str_replace($extension, 'test', $url);
+}
