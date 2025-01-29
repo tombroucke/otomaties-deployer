@@ -60,5 +60,15 @@ function suggestedLocalUrl()
 {
     $url = get('url');
     $extension = pathinfo($url, PATHINFO_EXTENSION);
-    return str_replace($extension, 'test', $url);
+    return str_replace(
+        [
+            $extension,
+            'staging.'
+        ],
+        [
+            'test',
+            ''
+        ],
+        $url
+    );
 }

@@ -26,8 +26,6 @@ task('db:pull', function () {
 				'display_stats' => true
 			]
 		);
-
-		runLocally(replaceCollation($tmpFile));
 	
 		// import database locally
 		writeln('Importing database');
