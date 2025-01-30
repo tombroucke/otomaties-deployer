@@ -3,7 +3,7 @@ namespace Deployer;
 
 desc('Pull Database');
 task('db:pull', function () {
-	$localUrl = ask('Local URL', suggestedLocalUrl());
+	$localUrl = ask('Local URL', $_SERVER['WP_HOME']);
 	$date = date('Y-m-d_H-i-s');
 	$uniqueId = uniqid();
 	$dbFilename = "db-{$date}-{$uniqueId}.sql";
@@ -98,7 +98,7 @@ task('db:download', function () {
 
 desc('Push Database');
 task('db:push', function() {
-	$localUrl = ask('Local URL', suggestedLocalUrl());
+	$localUrl = ask('Local URL', $_SERVER['WP_HOME']);
 	$date = date('Y-m-d_H-i-s');
 	$uniqueId = uniqid();
 	$dbFilename = "db-{$date}-{$uniqueId}.sql";
