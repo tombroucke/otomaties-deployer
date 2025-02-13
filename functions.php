@@ -1,21 +1,24 @@
-<?php 
+<?php
+
 namespace Deployer;
 
-function createFileIfNotExists($path) : bool
+function createFileIfNotExists($path): bool
 {
-    if (!test("[ -f {$path} ]")) {
+    if (! test("[ -f {$path} ]")) {
         run("mkdir -p $(dirname {$path})");
         run("touch {$path}");
+
         return true;
     }
-    
+
     return false;
 }
 
-function runWpQuery($filename) {
+function runWpQuery($filename)
+{
     $deployPath = get('deploy_path');
     $webRoot = get('web_root');
-    
+
     $query = file_get_contents(__DIR__ . '/snippets/' . ltrim($filename, '/') . '.sql');
 
     // Extracting placeholders and default values
@@ -26,8 +29,8 @@ function runWpQuery($filename) {
         'domain_no_extension' => preg_replace('/\.[^.]*$/', '', $url),
         'domain_extension' => $url,
     ];
-    
-    foreach($matches as $match) {
+
+    foreach ($matches as $match) {
         $replace = $match[0];
         $key = $match[1];
         $defaultValue = $match[2] ?? $defaults[$key] ?? '';
@@ -36,10 +39,11 @@ function runWpQuery($filename) {
         } else {
             $value = ask("Enter a value for {$key}", $defaultValue);
         }
-        $query = str_replace($replace, $value, $query);        
+        $query = str_replace($replace, $value, $query);
     }
 
-    $query = trim(str_replace("'", "\"", $query));
+    $query = trim(str_replace("'", '"', $query));
+
     return run("wp db query '{$query}' --path={$deployPath}/current/{$webRoot}/wp");
 }
 
@@ -53,5 +57,15 @@ function requestHeaders()
         $base64EncodedString = base64_encode("{$basicAuthUser}:{$basicAuthPass}");
         $headers['Authorization'] = "Basic {$base64EncodedString}";
     }
+
     return $headers;
+}
+
+function createSlug(string $string): string
+{
+    $string = strtolower($string);
+    $string = preg_replace('/[^a-z0-9\s-]/', '', $string);
+    $string = preg_replace('/[\s-]+/', '-', trim($string));
+
+    return $string;
 }
