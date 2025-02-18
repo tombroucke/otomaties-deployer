@@ -74,13 +74,16 @@ after('deploy:cleanup', 'cleanup:unused_themes');
 /** Unlock deploy */
 after('deploy:failed', 'deploy:unlock');
 ```
+
 ## WooCommerce
+
 ```php
 /** Update WooCommerce tables */
 after('deploy:symlink', 'woocommerce:update_database');
 ```
 
 ## WordPress cache
+
 ```php
 /** Update WooCommerce tables */
 after('deploy:symlink', 'wordpress:clear_cache');
@@ -88,42 +91,71 @@ after('deploy:symlink', 'wordpress:clear_cache');
 
 ## Extra commands
 
-### Enable basic auth on host:
+### Initial setup
+
+#### Symlink hosts on Combell
 
 ```bash
-dep auth:password_protect_stage staging
+dep combell:host_symlink production
 ```
 
-### Create bedrock .env file
+#### Create bedrock .env file
 
 ```bash
 dep bedrock:create_env staging
 ```
 
-### Add repository authentication to remote server
+#### Enable basic auth on host:
 
+```bash
+dep auth:password_protect_stage staging
+```
+
+#### Add repository authentication to remote server
 
 ```bash
 dep composer:add_remote_repository_authentication
 ```
 
-### Setup Wordfence firewall for Bedrock / deployer
+### Security
 
+#### Setup Wordfence firewall for Bedrock / deployer
 
 ```bash
 dep wordfence:firewall_setup
 ```
 
-### Add .htaccess rules for security
+#### Set default Wordfence configuration
 
-
-```bash
-dep otomaties:htaccess_rules
-
-```
-### Set default Wordfence configuration
-
+> [!WARNING]
+> The website needs to be be fully installed before you can run this command
 
 ```bash
 dep wordfence:default_configuration
+```
+
+#### Add .htaccess rules for security
+
+```bash
+dep otomaties:htaccess_rules
+```
+
+### Database handling
+
+#### Pull database from production
+
+```bash
+dep db:pull production
+```
+
+#### Download database
+
+```bash
+dep db:download production
+```
+
+#### Push database to staging
+
+```bash
+dep db:push staging
 ```
