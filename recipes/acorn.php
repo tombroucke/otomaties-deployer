@@ -42,3 +42,25 @@ task('acorn:acf_cache', function () {
         }
     );
 });
+
+
+/** Optimize */
+desc('Optimize');
+task('acorn:optimize', function () {
+    within(
+        '{{release_path}}',
+        function () {
+            if (! test('wp cli has-command acorn')) {
+                writeln('<comment>Aborted: Unable to optimize, wp acorn is not a registered command</comment>'); // phpcs:ignore:Generic.Files.LineLength
+                return;
+            }
+
+            try {
+                run('wp acorn optimize');
+            } catch (\Exception $e) {
+                writeln('<comment>Unable to optimize</comment>');
+                writeln('<comment>Output: '.$e->getMessage() . '</comment>');
+            }
+        }
+    );
+});
