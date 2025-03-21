@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 desc('Purge all caches');
@@ -7,7 +8,7 @@ task('runcloud-hub:purgeall', function () {
         '{{release_path}}',
         function () {
             run('wp runcloud-hub purgeall');
-        }
+        },
     );
 });
 
@@ -17,6 +18,6 @@ task('runcloud-hub:update-dropin', function () {
         '{{release_path}}',
         function () {
             run('wp runcloud-hub update-dropin');
-        }
+        },
     );
 });

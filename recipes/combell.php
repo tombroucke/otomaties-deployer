@@ -2,15 +2,17 @@
 
 namespace Deployer;
 
+use Deployer\Utility\Httpie;
+
 /** Symlink hosts */
 desc('Symlink app to host');
 task('combell:host_symlink', function () {
     $deployPath = get('deploy_path');
     $branch = get('branch');
     $webRoot = get('web_root');
-    $directory = currentHost()->getAlias() === 'production' ? 'www' : 'subsites/'.parse_url(get('url'), PHP_URL_HOST);
+    $directory = currentHost()->getAlias() === 'production' ? 'www' : 'subsites/' . parse_url(get('url'), PHP_URL_HOST);
 
-    $assumedPath = str_replace('app/'.$branch, '', $deployPath).$directory;
+    $assumedPath = str_replace('app/' . $branch, '', $deployPath) . $directory;
 
     // check if symlink exists
     if (test("[ -L {$assumedPath} ]")) {
@@ -21,7 +23,7 @@ task('combell:host_symlink', function () {
 
     // check if assumed path is a directory
     if (test("[ -d {$assumedPath} ]")) {
-        $backupPath = $assumedPath.'.bak';
+        $backupPath = $assumedPath . '.bak';
         writeln("Assumed path {$assumedPath} is a directory, moving to {$backupPath}");
         run("mv {$assumedPath} {$assumedPath}.bak");
     }
@@ -121,11 +123,15 @@ function reloadPhp()
 function revisionHasBeenUpdated($reloadedFileCheckContent)
 {
     try {
-        $reloadedFileContent = fetch(
-            url('/combell-reloaded-check.txt'),
-            'get',
-            requestHeaders()
-        );
+        $request = Httpie::get(url('/combell-reloaded-check.txt'))
+            ->setopt(CURLOPT_SSL_VERIFYPEER, ! input()->getOption('skip-ssl-verify'));
+
+        foreach (requestHeaders() as $key => $value) {
+            $request = $request->header($key, $value);
+        }
+
+        $reloadedFileContent = $request
+            ->send();
 
         return strpos($reloadedFileContent, $reloadedFileCheckContent) === 0;
     } catch (\Throwable $th) {

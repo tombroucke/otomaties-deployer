@@ -6,6 +6,10 @@
 composer require tombroucke/otomaties-deployer --dev
 ```
 
+## Options
+
+Use `dep deploy production --skip-ssl-verify` to deploy a website without a SSL certificate
+
 ## Example deploy.php file
 
 ```php

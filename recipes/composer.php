@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 desc('Add repository authentication to remote server');

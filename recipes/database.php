@@ -26,7 +26,7 @@ task('db:pull', function () {
             [
                 'progress_bar' => true,
                 'display_stats' => true,
-            ]
+            ],
         );
 
         // import database locally
@@ -83,7 +83,7 @@ task('db:download', function () {
             [
                 'progress_bar' => true,
                 'display_stats' => true,
-            ]
+            ],
         );
     } catch (\Throwable $th) {
         $message = $th->getMessage();
@@ -130,7 +130,7 @@ task('db:push', function () {
             [
                 'progress_bar' => true,
                 'display_stats' => true,
-            ]
+            ],
         );
 
         run(replaceCollation($remoteDbFilePath));

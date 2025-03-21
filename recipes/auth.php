@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 desc('Password protect stage');
@@ -16,7 +17,7 @@ task('auth:password_protect_stage', function () {
         ob_start();
         echo "{$username}:{$encryptedPassword}";
         $content = ob_get_clean();
-    
+
         run("echo \"{$content}\" >> {$deployPath}/shared/{$webRoot}/.htpasswd");
     } else {
         writeln('<comment>Username already exists</comment>');
@@ -25,7 +26,7 @@ task('auth:password_protect_stage', function () {
     // Create htaccess file
     if (!test("grep -q AuthUserFile {$deployPath}/shared/{$webRoot}/.htaccess")) {
         createFileIfNotExists("{$deployPath}/shared/{$webRoot}/.htaccess");
-        
+
         // Add htaccess rules
         ob_start();
         echo <<<EOL
@@ -34,9 +35,9 @@ task('auth:password_protect_stage', function () {
         AuthUserFile {$deployPath}/shared/{$webRoot}/.htpasswd
         Require valid-user
         EOL;
-    
+
         $content = ob_get_clean();
-    
+
         run("echo \"{$content}\" >> {$deployPath}/shared/{$webRoot}/.htaccess");
     } else {
         writeln('<comment>Basic auth already in effect</comment>');

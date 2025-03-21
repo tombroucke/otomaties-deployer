@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 desc('Makes sure, .env file for Bedrock is available');
@@ -26,9 +27,9 @@ task('bedrock:create_env', function () {
             'LOGGED_IN_SALT',
             'NONCE_SALT',
         ];
-    
+
         writeln('<comment>Generating .env file</comment>');
-    
+
         // Ask for credentials
         $dbName = ask(get('stage') . ' DB_NAME');
         $dbUser = ask(get('stage') . ' DB_USER');
@@ -39,9 +40,9 @@ task('bedrock:create_env', function () {
             'staging' => 'staging',
             'production' => 'production',
         ], 'production');
-    
+
         ob_start();
-    
+
         echo <<<EOL
         DB_NAME='{$dbName}'
         DB_USER='{$dbUser}'
@@ -64,15 +65,15 @@ task('bedrock:create_env', function () {
         
         # Generate your keys here: https://roots.io/salts.html
         EOL;
-    
+
         echo PHP_EOL;
 
         foreach ($salt_keys as $key) {
             echo $key . "='" . generate_salt() . "'" . PHP_EOL;
         }
-    
+
         $content = ob_get_clean();
-    
+
         run("echo \"{$content}\" > {$deployPath}/shared/.env");
     } else {
         writeln('<comment>.env file already exists</comment>');
@@ -99,7 +100,7 @@ function generate_salt()
     $char_option_length = strlen($chars) - 1;
 
     $password = '';
-    for ($i = 0; $i < 64; $i ++) {
+    for ($i = 0; $i < 64; $i++) {
         $password .= substr($chars, random_int(0, $char_option_length), 1);
     }
 

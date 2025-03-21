@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 desc('Update database');
@@ -7,6 +8,6 @@ task('woocommerce:update_database', function () {
         '{{release_path}}',
         function () {
             run('wp wc update');
-        }
+        },
     );
 });

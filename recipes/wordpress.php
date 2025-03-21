@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 /** Clear cache */
@@ -8,7 +9,7 @@ task('wordpress:clear_cache', function () {
         '{{release_path}}',
         function () {
             run('wp cache flush');
-        }
+        },
     );
 });
 

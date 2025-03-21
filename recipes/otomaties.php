@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 /* Add revision.txt */
@@ -43,7 +44,8 @@ task('otomaties:security_headers', function () {
     appendToHtaccess('snippets/htaccess/security-headers.txt');
 });
 
-function appendToHtaccess($filepath) {
+function appendToHtaccess($filepath)
+{
     $deployPath = get('deploy_path');
     $webRoot = get('web_root');
 
@@ -51,9 +53,9 @@ function appendToHtaccess($filepath) {
     $content = PHP_EOL . '# Otomaties deployer: ' . $filepath . PHP_EOL;
 
     $content .= file_get_contents(dirname(__DIR__) . '/' . $filepath);
-    
+
     if (!test("grep -q {$filepath} {$deployPath}/shared/{$webRoot}/.htaccess")) {
-        createFileIfNotExists($htaccessPath);    
+        createFileIfNotExists($htaccessPath);
         // Append content to .htaccess
         $slashedContent = addcslashes($content, '"`$\\');
         run("echo \"{$slashedContent}\" >> {$htaccessPath}");

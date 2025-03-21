@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 desc('Set up Wordfence firewall in bedrock / deployer installation');
@@ -18,7 +19,7 @@ task('wordfence:firewall_setup', function () {
         auto_prepend_file = '{$sharedWebrootPath}/wordfence-waf.php'
         ; END Wordfence WAF
         EOL;
-    
+
     $content = ob_get_clean();
 
     run("echo \"{$content}\" > {$userIniFilePath}");
@@ -35,7 +36,7 @@ task('wordfence:firewall_setup', function () {
             include_once '{$deployPath}/current/{$webRoot}/app/plugins/wordfence/waf/bootstrap.php';
         }
         EOL;
-    
+
     $content = ob_get_clean();
 
     run("echo \"{$content}\" > {$wordfenceWafFilePath}");

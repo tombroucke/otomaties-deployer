@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 /** Fetch google fonts */
@@ -16,9 +17,9 @@ task('acorn:fetch_google_fonts', function () {
                 run('wp acorn google-fonts:fetch');
             } catch (\Exception $e) {
                 writeln('<comment>Unable to fetch google fonts</comment>');
-                writeln('<comment>Output: '.$e->getMessage() . '</comment>');
+                writeln('<comment>Output: ' . $e->getMessage() . '</comment>');
             }
-        }
+        },
     );
 });
 
@@ -37,9 +38,9 @@ task('acorn:acf_cache', function () {
                 run('wp acorn acf:cache');
             } catch (\Exception $e) {
                 writeln('<comment>Unable to cache ACF fields</comment>');
-                writeln('<comment>Output: '.$e->getMessage() . '</comment>');
+                writeln('<comment>Output: ' . $e->getMessage() . '</comment>');
             }
-        }
+        },
     );
 });
 
@@ -59,8 +60,8 @@ task('acorn:optimize', function () {
                 run('wp acorn optimize');
             } catch (\Exception $e) {
                 writeln('<comment>Unable to optimize</comment>');
-                writeln('<comment>Output: '.$e->getMessage() . '</comment>');
+                writeln('<comment>Output: ' . $e->getMessage() . '</comment>');
             }
-        }
+        },
     );
 });

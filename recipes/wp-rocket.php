@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 /** Clear cache */
@@ -9,7 +10,7 @@ task('wp_rocket:clear_cache', function () {
         function () {
             run('wp rocket regenerate --file=advanced-cache');
             run('wp rocket clean --confirm');
-        }
+        },
     );
 });
 
@@ -20,6 +21,6 @@ task('wp_rocket:preload_cache', function () {
         '{{release_path}}',
         function () {
             run('wp rocket preload');
-        }
+        },
     );
 });

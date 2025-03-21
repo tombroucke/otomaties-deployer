@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 /** Install sage composer dependencies */

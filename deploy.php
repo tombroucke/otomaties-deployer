@@ -1,4 +1,5 @@
 <?php
+
 namespace Deployer;
 
 require_once 'recipe/composer.php';
@@ -9,6 +10,8 @@ require_once 'functions.php';
 foreach (glob(__DIR__ . '/recipes/*.php') as $filename) {
     require_once $filename;
 }
+
+option('skip-ssl-verify', false);
 
 /** Config */
 set('keep_releases', 3);
