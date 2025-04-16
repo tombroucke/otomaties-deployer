@@ -39,6 +39,11 @@ task('otomaties:woff2_expires_headers', function () {
     appendToHtaccess('snippets/htaccess/woff2-expires-headers.txt');
 });
 
+desc('text/javascript Expires headers');
+task('otomaties:text_javascript_expires', function () {
+    appendToHtaccess('snippets/htaccess/text-javascript-expires-headers.txt');
+});
+
 desc('Security headers');
 task('otomaties:security_headers', function () {
     appendToHtaccess('snippets/htaccess/security-headers.txt');
@@ -54,7 +59,7 @@ function appendToHtaccess($filepath)
 
     $content .= file_get_contents(dirname(__DIR__) . '/' . $filepath);
 
-    if (!test("grep -q {$filepath} {$deployPath}/shared/{$webRoot}/.htaccess")) {
+    if (! test("grep -q {$filepath} {$deployPath}/shared/{$webRoot}/.htaccess")) {
         createFileIfNotExists($htaccessPath);
         // Append content to .htaccess
         $slashedContent = addcslashes($content, '"`$\\');
@@ -69,5 +74,6 @@ task('otomaties:htaccess_rules', [
     'otomaties:disable_xmlrpc',
     'otomaties:7g_firewall',
     'otomaties:woff2_expires_headers',
+    'otomaties:text_javascript_expires',
     'otomaties:security_headers',
 ]);

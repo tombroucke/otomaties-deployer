@@ -1,3 +1,4 @@
+# BEGIN 7G Firewall
 # 7G FIREWALL v1.5 20211103
 # @ https://perishablepress.com/7g-firewall/
 
