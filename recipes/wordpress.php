@@ -15,5 +15,10 @@ task('wordpress:clear_cache', function () {
 
 desc('Set administration email address');
 task('wordpress:set_admin_email', function () {
-    runWpQuery('wordpress/admin-email');
+    runWpDbQuery('wordpress/admin-email');
+});
+
+desc('Allow editors to edit theme options');
+task('wordpress:editor_edit_theme_options', function () {
+    runWpQuery('wp cap add editor edit_theme_options');
 });

@@ -14,11 +14,18 @@ function createFileIfNotExists($path): bool
     return false;
 }
 
-function runWpQuery($filename)
+function runWpQuery($command)
 {
     $deployPath = get('deploy_path');
     $webRoot = get('web_root');
 
+    $command = str_replace('wp ', '', $command);
+
+    return run("wp {$command} --path={$deployPath}/current/{$webRoot}/wp");
+}
+
+function runWpDbQuery($filename)
+{
     $query = file_get_contents(__DIR__ . '/snippets/' . ltrim($filename, '/') . '.sql');
 
     // Extracting placeholders and default values
@@ -44,7 +51,7 @@ function runWpQuery($filename)
 
     $query = trim(str_replace("'", '"', $query));
 
-    return run("wp db query '{$query}' --path={$deployPath}/current/{$webRoot}/wp");
+    runWpQuery("wp db query '{$query}'");
 }
 
 function requestHeaders()

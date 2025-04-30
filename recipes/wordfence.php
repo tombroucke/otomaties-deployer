@@ -44,12 +44,12 @@ task('wordfence:firewall_setup', function () {
 
 desc('Wordfence default configuration');
 task('wordfence:default_configuration', function () {
-    runWpQuery('wordfence/activity-report');
-    runWpQuery('wordfence/banned-urls');
-    runWpQuery('wordfence/display');
-    runWpQuery('wordfence/email-alert-preferences');
-    runWpQuery('wordfence/general');
-    runWpQuery('wordfence/loginsec');
-    runWpQuery('wordfence/notifications');
-    runWpQuery('wordfence/scan');
+    runWpDbQuery('wordfence/activity-report');
+    runWpDbQuery('wordfence/banned-urls');
+    runWpDbQuery('wordfence/display');
+    runWpDbQuery('wordfence/email-alert-preferences');
+    runWpDbQuery('wordfence/general');
+    runWpDbQuery('wordfence/loginsec');
+    runWpDbQuery('wordfence/notifications');
+    runWpDbQuery('wordfence/scan');
 });
