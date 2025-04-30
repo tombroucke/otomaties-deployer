@@ -166,3 +166,17 @@ dep db:download production
 ```bash
 dep db:push staging
 ```
+
+### WordPress
+
+#### Allow editors to edit theme options
+
+```
+dep wordpress:editor_edit_theme_options
+```
+
+#### Set admin email
+
+```
+dep wordpress:set_admin_email
+```
