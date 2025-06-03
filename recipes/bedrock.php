@@ -7,13 +7,12 @@ task('bedrock:create_env', function () {
 
     // Check if url is set
     $url = rtrim(get('url'), '/');
-    if (!$url || $url == '') {
-        writeln('url is empty');
-        exit;
+    if (! $url || $url == '') {
+        throw new \RuntimeException('Please set the url in your deploy config.');
     }
 
     $deployPath = get('deploy_path');
-    if (!test("[ -f {$deployPath}/shared/.env ]")) {
+    if (! test("[ -f {$deployPath}/shared/.env ]")) {
         run("mkdir -p {$deployPath}/shared/ && touch {$deployPath}/shared/.env");
 
         // Keys that require a salt token
@@ -35,7 +34,7 @@ task('bedrock:create_env', function () {
         $dbUser = ask(get('stage') . ' DB_USER');
         $dbPass = askHiddenResponse(get('stage') . ' DB_PASSWORD');
         $dbHost = ask(get('stage') . ' DB_HOST', $dbName . '.db.webhosting.be');
-        $wpEnv  = askChoice(get('stage') . ' WP_ENV', [
+        $wpEnv = askChoice(get('stage') . ' WP_ENV', [
             'development' => 'development',
             'staging' => 'staging',
             'production' => 'production',
@@ -91,12 +90,12 @@ task('bedrock:upload_auth_json', function () {
 
 desc('Remove auth.json from remote');
 task('bedrock:remove_auth_json', function () {
-    run("rm {{release_path}}/auth.json");
+    run('rm {{release_path}}/auth.json');
 });
 
 function generate_salt()
 {
-    $chars              = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%^&*()-_[]{}<>~+=,.;:/?|';
+    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%^&*()-_[]{}<>~+=,.;:/?|';
     $char_option_length = strlen($chars) - 1;
 
     $password = '';
