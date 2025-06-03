@@ -2,6 +2,14 @@
 
 namespace Deployer;
 
+/** Abort if Vite is running hot */
+desc('Abort if Vite is running hot');
+task('sage:check_vite', function () {
+    if (testLocally('[ -f {{sage/theme_path}}/{{sage/public_dir}}/hot ]')) {
+        throw new \RuntimeException('Vite is running hot. Please stop the dev server before deploying.');
+    }
+});
+
 /** Install sage composer dependencies */
 desc('Runs composer install on remote server');
 task('sage:vendors', function () {

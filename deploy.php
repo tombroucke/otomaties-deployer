@@ -49,6 +49,9 @@ add('shared_dirs', [
 /** Writable directories */
 add('writable_dirs', []);
 
+/** Abort if Vite is running hot */
+before('deploy:prepare', 'sage:check_vite');
+
 /** Copy auth.json */
 before('deploy:vendors', 'bedrock:upload_auth_json');
 
