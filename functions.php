@@ -14,16 +14,19 @@ function createFileIfNotExists($path): bool
     return false;
 }
 
-function runWpQuery($command)
+function runWpQuery($cmd, $path = '{{release_path}}')
 {
-    $deployPath = get('deploy_path');
-    $webRoot = get('web_root');
-
-    if (str_starts_with($command, 'wp ')) {
-        $command = substr($command, 3);
+    if (! str_starts_with($cmd, 'wp ')) {
+        $cmd = "wp {$cmd}";
     }
 
-    return run("wp {$command} --path={$deployPath}/current/{$webRoot}/wp");
+    writeln("<info>Running WP CLI command:</info> <comment>{$cmd}</comment> in <comment>{$path}</comment>");
+    within($path, function () use ($cmd) {
+        return run(
+            command: $cmd,
+            real_time_output: true
+        );
+    });
 }
 
 function runWpDbQuery($filename)

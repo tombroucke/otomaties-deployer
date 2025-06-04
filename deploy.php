@@ -2,8 +2,6 @@
 
 namespace Deployer;
 
-use Symfony\Component\Console\Input\InputOption;
-
 require_once 'recipe/composer.php';
 require_once 'contrib/slack.php';
 require_once 'functions.php';
@@ -13,8 +11,8 @@ foreach (glob(__DIR__ . '/recipes/*.php') as $filename) {
     require_once $filename;
 }
 
-option('skip-ssl-verify', false);
-option('cmd', null, InputOption::VALUE_REQUIRED, 'The command to run', null);
+option('skip-ssl-verify');
+option('cmd');
 
 /** Config */
 set('keep_releases', 3);

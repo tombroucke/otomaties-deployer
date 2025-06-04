@@ -82,6 +82,13 @@ after('deploy:cleanup', 'cleanup:unused_themes');
 after('deploy:failed', 'deploy:unlock');
 ```
 
+## WordPress
+
+```php
+/** Flush object cache */
+after('deploy:symlink', fn () => runWpQuery('cache flush'));
+```
+
 ## WooCommerce
 
 ```php
@@ -164,16 +171,52 @@ dep db:push staging
 
 #### WP CLI
 
-##### Cache
+```bash
+dep wp:cli
+```
+
+##### Install packages
 
 ```bash
-dep wp:cli --cmd="cache flush" # Flush cache
+dep wp:cli --cmd="wp package install {package_name}"
+```
+
+```bash
+dep wp:cli --cmd="wp package install tombroucke/wp-rocket-cli" # Install WP Rocket CLI package
+```
+
+```bash
+dep wp:cli --cmd="wp package install aaemnnosttv/wp-cli-login-command" # Install login package
+```
+
+##### Flush Object Cache
+
+```bash
+dep wp:cli --cmd="wp cache flush" # Flush cache
 ```
 
 ##### Capabilities
 
 ```bash
-dep wp:cli --cmd="cap add editor edit_theme_options" # Allow editor to update theme options
+dep wp:cli --cmd="wp user add-cap {login} edit_theme_options" # Allow user to update theme options
+```
+
+```bash
+dep wp:cli --cmd="wp cap add editor edit_theme_options" # Allow editor to update theme options
+```
+
+```bash
+dep wp:cli --cmd="wp cap add editor manage_instagram_feed_options" # Allow editor to manage smash balloon instagram feed
+```
+
+```bash
+dep wp:cli --cmd="wp cap add editor gform_full_access" # Allow editor access to Gravity Forms
+```
+
+##### Login
+
+```bash
+dep wp:cli --cmd="wp login create {login}" # Create login
 ```
 
 #### Set admin email
