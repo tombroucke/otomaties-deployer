@@ -2,11 +2,6 @@
 
 namespace Deployer;
 
-desc('Set administration email address');
-task('wp:set:admin_email', function () {
-    runWpDbQuery('wordpress/admin-email');
-});
-
 desc('Run WP CLI command');
 task('wp:cli', function () {
     $command = input()->getOption('cmd');
