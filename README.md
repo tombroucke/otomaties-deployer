@@ -89,13 +89,6 @@ after('deploy:failed', 'deploy:unlock');
 after('deploy:symlink', 'woocommerce:update_database');
 ```
 
-## WordPress cache
-
-```php
-/** Update WooCommerce tables */
-after('deploy:symlink', 'wordpress:clear_cache');
-```
-
 ## Extra commands
 
 ### Initial setup
@@ -169,14 +162,22 @@ dep db:push staging
 
 ### WordPress
 
-#### Allow editors to edit theme options
+#### WP CLI
 
+##### Cache
+
+```bash
+dep wp:cli --cmd="cache flush" # Flush cache
 ```
-dep wordpress:editor_edit_theme_options
+
+##### Capabilities
+
+```bash
+dep wp:cli --cmd="cap add editor edit_theme_options" # Allow editor to update theme options
 ```
 
 #### Set admin email
 
-```
-dep wordpress:set_admin_email
+```bash
+dep wp:set:admin_email
 ```
