@@ -222,5 +222,5 @@ dep wp:cli --cmd="wp login create {login}" # Create login
 #### Set admin email
 
 ```bash
-dep wp:cli --cmd="wp option update admin_email {emailaddress} --autoload=yes" # Create login
+dep wp:cli --cmd="wp option update admin_email {emailaddress} --autoload=yes" # Change admin emailaddress
 ```
