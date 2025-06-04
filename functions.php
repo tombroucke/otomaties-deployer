@@ -19,7 +19,9 @@ function runWpQuery($command)
     $deployPath = get('deploy_path');
     $webRoot = get('web_root');
 
-    $command = str_replace('wp ', '', $command);
+    if (str_starts_with($command, 'wp ')) {
+        $command = substr($command, 3);
+    }
 
     return run("wp {$command} --path={$deployPath}/current/{$webRoot}/wp");
 }
