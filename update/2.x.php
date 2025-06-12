@@ -37,7 +37,7 @@ if (strpos($contents, 'composer:upload_auth_json') === false) {
 if (strpos($contents, 'composer:remove_auth_json') === false) {
     $contents = preg_replace(
         '/\/\*\* Install theme dependencies \*\//',
-        '/** Remove auth.json */'.PHP_EOL.'before(\'deploy:vendors\', \'composer:remove_auth_json\');'.PHP_EOL.PHP_EOL.'$0',
+        '/** Remove auth.json */'.PHP_EOL.'after(\'deploy:vendors\', \'composer:remove_auth_json\');'.PHP_EOL.PHP_EOL.'$0',
         $contents
     );
 }
