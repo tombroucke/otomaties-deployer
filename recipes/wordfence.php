@@ -166,7 +166,7 @@ set('wordfence/config', collect([
     'scan_max_resume_attempts' => '2',
 ]));
 
-desc('Set up Wordfence firewall in bedrock / deployer installation');
+desc('Set up Wordfence firewall in Bedrock installation');
 task('wordfence:firewall_setup', function () {
     $deployPath = get('deploy_path');
     $webRoot = get('web_root');

@@ -9,7 +9,7 @@ require_once __DIR__ . '/../functions.php';
 option('skip-ssl-verify');
 
 /** Symlink hosts */
-desc('Symlink app to host');
+desc('Create the symlink from the deploy path to the host web root');
 task('combell:host_symlink', function () {
     $deployPath = get('deploy_path');
     $webRoot = get('web_root');
