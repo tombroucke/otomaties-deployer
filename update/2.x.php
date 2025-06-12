@@ -74,6 +74,7 @@ $contents = str_replace(
     \'recipes/combell.php\',
     \'recipes/composer.php\',
     \'recipes/database.php\',
+    \'recipes/htaccess.php\',
     \'recipes/opcode.php\',
     \'recipes/otomaties.php\',
     \'recipes/sage.php\',

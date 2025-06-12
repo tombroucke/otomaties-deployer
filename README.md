@@ -31,6 +31,7 @@ collect([
     'recipes/combell.php',
     'recipes/composer.php',
     'recipes/database.php',
+    'recipes/htaccess.php',
     'recipes/opcode.php',
     'recipes/otomaties.php',
     'recipes/sage.php',
@@ -205,9 +206,6 @@ dep wordfence:firewall_setup
 ```
 
 #### Set default Wordfence configuration
-
-> [!WARNING]
-> The website needs to be be fully installed before you can run this command
 
 You can overwrite the default config
 
