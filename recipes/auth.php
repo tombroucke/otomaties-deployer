@@ -4,8 +4,8 @@ namespace Deployer;
 
 require_once __DIR__ . '/../functions.php';
 
-desc('Password protect stage');
-task('auth:password_protect_stage', function () {
+desc('Add basic authentication to a certain host');
+task('auth:password_protect', function () {
     $deployPath = get('deploy_path');
     $webRoot = get('web_root');
 

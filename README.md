@@ -198,7 +198,7 @@ dep bedrock:create_env staging
 #### Enable basic auth on host:
 
 ```bash
-dep auth:password_protect_stage staging
+dep auth:password_protect staging
 ```
 
 #### Add repository authentication to remote server

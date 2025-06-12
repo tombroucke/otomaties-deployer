@@ -42,7 +42,7 @@ add('shared_dirs', [
     '{{ web_root }}/app/wp-rocket-config',
 ]);
 
-desc('Makes sure, .env file for Bedrock is available');
+desc('Create the .env file on the server');
 task('bedrock:create_env', function () {
     // Check if url is set
     $url = rtrim(get('url'), '/');

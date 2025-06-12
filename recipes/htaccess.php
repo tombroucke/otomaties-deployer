@@ -4,37 +4,37 @@ namespace Deployer;
 
 require_once __DIR__ . '/../functions.php';
 
-desc('Disable access to sensitive files');
+desc('Add .htaccess rule: disable access to sensitive files');
 task('htaccess:disable_access_to_sensitive_files', function () {
     appendToHtaccess('snippets/htaccess/sensitive-files.txt');
 });
 
-desc('Disable access to blade files');
+desc('Add .htaccess rule: disable access to blade files');
 task('htaccess:disable_access_to_blade_files', function () {
     appendToHtaccess('snippets/htaccess/disable-access-to-blade-files.txt');
 });
 
-desc('Disable xmlrpc');
+desc('Add .htaccess rule: disable xmlrpc');
 task('htaccess:disable_xmlrpc', function () {
     appendToHtaccess('snippets/htaccess/disable-xmlrpc.txt');
 });
 
-desc('7G firewall');
+desc('Add .htaccess rule: 7G firewall');
 task('htaccess:7g_firewall', function () {
     appendToHtaccess('snippets/htaccess/7g-firewall.txt');
 });
 
-desc('Woff2 Expires headers');
+desc('Add .htaccess rule: Woff2 Expires headers');
 task('htaccess:woff2_expires_headers', function () {
     appendToHtaccess('snippets/htaccess/woff2-expires-headers.txt');
 });
 
-desc('text/javascript Expires headers');
+desc('Add .htaccess rule: text/javascript Expires headers');
 task('htaccess:text_javascript_expires', function () {
     appendToHtaccess('snippets/htaccess/text-javascript-expires-headers.txt');
 });
 
-desc('Security headers');
+desc('Add .htaccess rule: Security headers');
 task('htaccess:security_headers', function () {
     appendToHtaccess('snippets/htaccess/security-headers.txt');
 });
