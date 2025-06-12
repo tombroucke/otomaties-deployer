@@ -2,12 +2,17 @@
 
 namespace Deployer;
 
+use Symfony\Component\Console\Input\InputOption;
+
+require_once __DIR__ . '/../functions.php';
+
+option('cmd', null, InputOption::VALUE_REQUIRED, 'The command to run', null);
+
 desc('Run WP CLI command');
 task('wp:cli', function () {
     $command = input()->getOption('cmd');
     $webRoot = get('web_root');
     $deployPath = get('deploy_path');
-    $path = "{$deployPath}/current/{$webRoot}/wp";
 
     $autocomplete = [
         'wp cache flush',
@@ -58,9 +63,12 @@ task('wp:cli', function () {
         'wp rewrite list --format={format:table}',
         'wp rewrite structure',
         'wp role list --format={format:table}',
+        'wp runcloud-hub purgeall',
+        'wp runcloud-hub update-dropin',
         'wp user add-cap {login} {capability:edit_theme_options}',
         'wp user add-role {login} {role:editor}',
         'wp user create {login} {email} --role={role:editor}',
+        'wp wc update',
     ];
 
     $replacements = [
@@ -122,5 +130,13 @@ task('wp:cli', function () {
         throw new \RuntimeException('You must provide a WP CLI command to run using the --cmd option.');
     }
 
-    runWpQuery($command, $path);
+    runWpQuery($command, cleanPath("{$deployPath}/current/{$webRoot}/wp"));
 })->once();
+
+/** Clean up */
+desc('Clean up unused themes');
+task('wp:remove_unused_themes', function () {
+    $webRoot = get('web_root');
+    $path = cleanPath("{$webRoot}/wp/wp-content/themes");
+    run("rm -rf {$path}/twenty*");
+});

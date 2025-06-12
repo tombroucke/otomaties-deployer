@@ -2,6 +2,8 @@
 
 namespace Deployer;
 
+use Illuminate\Support\Str;
+
 function createFileIfNotExists($path): bool
 {
     if (! test("[ -f {$path} ]")) {
@@ -80,4 +82,27 @@ function createSlug(string $string): string
     $string = preg_replace('/[\s-]+/', '-', trim($string));
 
     return $string;
+}
+
+function generateSalt()
+{
+    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%^&*()-_[]{}<>~+=,.;:/?|';
+    $charOptionLength = strlen($chars) - 1;
+
+    $password = '';
+    for ($i = 0; $i < 64; $i++) {
+        $password .= substr($chars, random_int(0, $charOptionLength), 1);
+    }
+
+    return $password;
+}
+
+function cleanPath($path)
+{
+    return Str::of($path)
+        ->replace(['\\', '//'], '/')
+        ->replace(['../', './'], '')
+        ->rtrim('/')
+        ->append('/')
+        ->toString();
 }

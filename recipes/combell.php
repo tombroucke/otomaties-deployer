@@ -4,16 +4,21 @@ namespace Deployer;
 
 use Deployer\Utility\Httpie;
 
+require_once __DIR__ . '/../functions.php';
+
+option('skip-ssl-verify');
+
 /** Symlink hosts */
 desc('Symlink app to host');
 task('combell:host_symlink', function () {
     $deployPath = get('deploy_path');
     $webRoot = get('web_root');
-    $directory = currentHost()->getAlias() === 'production' ? 'www' : 'subsites/'.parse_url(get('url'), PHP_URL_HOST);
+    $fullWebRootPath = $webRoot ? "{$deployPath}/current/{$webRoot}" : "{$deployPath}/current";
+    $directory = currentHost()->getAlias() === 'production' ? 'www' : 'subsites/' . parse_url(get('url'), PHP_URL_HOST);
 
     $parts = explode('/', trim($deployPath, '/'));
     $relativeDir = implode('/', array_slice($parts, -2));
-    $assumedPath = str_replace($relativeDir, '', $deployPath).$directory;
+    $assumedPath = str_replace($relativeDir, '', $deployPath) . $directory;
 
     // check if symlink exists
     if (test("[ -L {$assumedPath} ]")) {
@@ -22,16 +27,21 @@ task('combell:host_symlink', function () {
         return;
     }
 
+    if (! askConfirmation("<info>Warning</> Symlinking {$fullWebRootPath} to {$assumedPath}. Are you sure you want to continue?", false)) {
+        writeln('Aborted');
+
+        return;
+    }
+
     // check if assumed path is a directory
     if (test("[ -d {$assumedPath} ]")) {
-        $backupPath = $assumedPath.'.bak';
+        $backupPath = $assumedPath . '.bak';
         writeln("Assumed path {$assumedPath} is a directory, moving to {$backupPath}");
         run("mv {$assumedPath} {$assumedPath}.bak");
     }
 
     // symlink app to host
-    writeln("Symlinking {$deployPath}/current/{$webRoot} to {$assumedPath}");
-    run("ln -s {$deployPath}/current/{$webRoot} {$assumedPath}");
+    run("ln -s {$fullWebRootPath} {$assumedPath}");
 
     // reload PHP
     reloadPhp();

@@ -2,8 +2,10 @@
 
 namespace Deployer;
 
+require_once __DIR__ . '/../functions.php';
+
 desc('Pull Database');
-task('db:pull', function () {
+task('wp:db:pull', function () {
     $localUrl = ask('Local URL', $_SERVER['WP_HOME']);
     $date = date('Y-m-d_H-i-s');
     $uniqueId = uniqid();
@@ -11,10 +13,12 @@ task('db:pull', function () {
     $remoteDbFilePath = get('deploy_path') . '/' . $dbFilename;
     $tmpDir = sys_get_temp_dir();
     $tmpFile = "{$tmpDir}/{$dbFilename}";
+    $webRoot = get('web_root');
 
     try {
         // Export database on server
-        $exportCommand = "wp db export {$remoteDbFilePath} --path={{deploy_path}}/current/{{web_root}}/wp";
+        $remoteWpPath = cleanPath("{{deploy_path}}/current/{$webRoot}/wp");
+        $exportCommand = "wp db export {$remoteDbFilePath} --path={$remoteWpPath}";
         writeln("Exporting database to {$remoteDbFilePath} using command: {$exportCommand}");
         run($exportCommand);
 
@@ -30,12 +34,13 @@ task('db:pull', function () {
         );
 
         // import database locally
-        $importCommand = "wp db import {$tmpFile} --allow-root --path={{web_root}}/wp";
+        $localWpPath = cleanPath("{$webRoot}/wp");
+        $importCommand = "wp db import {$tmpFile} --allow-root --path={$localWpPath}";
         writeln('Importing database locally using command: ' . $importCommand);
         runLocally($importCommand);
 
         // Replace url
-        $searchReplaceCommand = "wp search-replace {{url}} {$localUrl} --allow-root --path={{web_root}}/wp";
+        $searchReplaceCommand = "wp search-replace {{url}} {$localUrl} --allow-root --path={$localWpPath}";
         writeln('Replacing urls locally using command: ' . $searchReplaceCommand);
         runLocally($searchReplaceCommand);
     } catch (\Throwable $th) {
@@ -61,17 +66,19 @@ task('db:pull', function () {
 });
 
 desc('Download Database');
-task('db:download', function () {
+task('wp:db:download', function () {
     $date = date('Y-m-d_H-i-s');
     $uniqueId = uniqid();
     $dbFilename = createSlug(get('application')) . "-{$date}-{$uniqueId}.sql";
     $remoteDbFilePath = get('deploy_path') . '/' . $dbFilename;
     $downloadDir = ask('Download directory', getenv('HOME') . '/Downloads');
     $tmpFile = "{$downloadDir}/{$dbFilename}";
+    $webRoot = get('web_root');
 
     try {
         // Export database on server
-        $exportCommand = "wp db export {$remoteDbFilePath} --path={{deploy_path}}/current/{{web_root}}/wp";
+        $remoteWpPath = cleanPath("{{deploy_path}}/current/{$webRoot}/wp");
+        $exportCommand = "wp db export {$remoteDbFilePath} --path={$remoteWpPath}";
         writeln("Exporting database to {$remoteDbFilePath} using command: {$exportCommand}");
         run($exportCommand);
 
@@ -102,7 +109,7 @@ task('db:download', function () {
 });
 
 desc('Push Database');
-task('db:push', function () {
+task('wp:db:push', function () {
     if (! askConfirmation('<bg=red;fg=white;options=bold>Warning</><bg=red;fg=white>, this will overwrite the database on the remote server. Are you sure you want to continue?</>', false)) {
         writeln('Aborted');
 
@@ -116,11 +123,13 @@ task('db:push', function () {
     $remoteDbFilePath = get('deploy_path') . '/' . $dbFilename;
     $tmpDir = sys_get_temp_dir();
     $tmpFile = "{$tmpDir}/{$dbFilename}";
+    $webRoot = get('web_root');
 
     try {
         // Export database locally
+        $localWpPath = cleanPath("{$webRoot}/wp");
         writeln("Exporting database to {$tmpFile}");
-        runLocally("wp db export {$tmpFile} --allow-root --path={{web_root}}/wp");
+        runLocally("wp db export {$tmpFile} --allow-root --path={$localWpPath}");
 
         // Upload database
         writeln("Uploading database to {$remoteDbFilePath}");
@@ -136,12 +145,13 @@ task('db:push', function () {
         run(replaceCollation($remoteDbFilePath));
 
         // Import database on server
+        $remoteWpPath = cleanPath("{{deploy_path}}/current/{$webRoot}/wp");
         writeln('Importing database');
-        run("wp db import {$remoteDbFilePath} --path={{deploy_path}}/current/{{web_root}}/wp");
+        run("wp db import {$remoteDbFilePath} --path={$remoteWpPath}");
 
         // Replace url
         writeln('Replacing urls');
-        run("wp search-replace {$localUrl} {{url}} --path={{deploy_path}}/current/{{web_root}}/wp");
+        run("wp search-replace {$localUrl} {{url}} --path={$remoteWpPath}");
     } catch (\Throwable $th) {
         $message = $th->getMessage();
         writeln("<fg=red;options=bold>error</> <error>$message</error>");

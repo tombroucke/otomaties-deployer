@@ -4,6 +4,10 @@ namespace Deployer;
 
 use Deployer\Utility\Httpie;
 
+require_once __DIR__ . '/../functions.php';
+
+option('skip-ssl-verify');
+
 /** Reset OPcode cache */
 desc('Reset OPcode cache');
 task('opcode:reset_cache', function () {
@@ -11,7 +15,7 @@ task('opcode:reset_cache', function () {
     $webRoot = get('web_root');
     $releasePath = get('release_path');
     $releaseRevision = get('release_revision');
-    $opCacheResetFilePath = "{$releasePath}/{$webRoot}/opcache_reset.{$releaseRevision}.php";
+    $opCacheResetFilePath = cleanPath("{$releasePath}/{$webRoot}/opcache_reset.{$releaseRevision}.php");
 
     run("echo \"<?php opcache_reset();\" > {$opCacheResetFilePath}");
 

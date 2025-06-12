@@ -17,36 +17,57 @@ Use `dep deploy production --skip-ssl-verify` to deploy a website without a SSL 
 namespace Deployer;
 
 require_once __DIR__ . '/vendor/autoload.php';
-require 'contrib/cachetool.php';
+require_once 'contrib/cachetool.php';
+require_once 'recipe/composer.php';
 
-$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+(\Dotenv\Dotenv::createImmutable(__DIR__))
+    ->load();
 
-require 'vendor/tombroucke/otomaties-deployer/deploy.php';
+require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/functions.php';
+require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/acorn.php';
+require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/auth.php';
+require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/bedrock.php';
+require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/combell.php';
+require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/composer.php';
+require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/database.php';
+require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/opcode.php';
+require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/otomaties.php';
+require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/sage.php';
+require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/wordfence.php';
+require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/wp.php';
 
 /** Config */
-set('web_root', 'web');
-set('application', '');
-set('repository', '');
-set('sage/theme_path', get('web_root') . '/app/themes/themename');
-set('sage/build_command', 'build --clean --flush'); // build --clean for bud, build:production for mix
+set('application', 'example.com');
+set('repository', 'git@github.com:username/example.com.git');
+
+/** Sage */
+set('sage/theme_path', 'app/themes/example');
 
 /** Hosts */
 host('production')
     ->set('hostname', 'ssh###.webhosting.be')
-    ->set('url', '')
-    ->set('remote_user', 'examplebe')
+    ->set('url', 'https://example.com')
+    ->set('remote_user', 'examplecom')
     ->set('branch', 'main')
-    ->set('deploy_path', '/data/sites/web/examplebe/app/main');
+    ->set('deploy_path', '/data/sites/web/examplecom/app/main');
 
 host('staging')
     ->set('hostname', 'ssh###.webhosting.be')
-    ->set('url', '')
-    ->set('basic_auth_user', $_SERVER['BASIC_AUTH_USER'] ?? '')
-    ->set('basic_auth_pass', $_SERVER['BASIC_AUTH_PASS'] ?? '')
-    ->set('remote_user', 'examplebe')
+    ->set('url', 'https://staging.example.com')
+    ->set('basic_auth_user', env('BASIC_AUTH_USER'))
+    ->set('basic_auth_pass', env('BASIC_AUTH_PASS'))
+    ->set('remote_user', 'examplecom')
     ->set('branch', 'staging')
-    ->set('deploy_path', '/data/sites/web/examplebe/app/staging');
+    ->set('deploy_path', '/data/sites/web/examplecom/app/staging');
+
+/** Check if everything is set for sage */
+before('deploy:prepare', 'sage:check');
+
+/** Upload auth.json */
+before('deploy:vendors', 'composer:upload_auth_json');
+
+/** Remove auth.json */
+after('deploy:vendors', 'composer:remove_auth_json');
 
 /** Install theme dependencies */
 after('deploy:vendors', 'sage:vendors');
@@ -61,39 +82,52 @@ after('deploy:update_code', 'otomaties:write_revision_to_file');
 after('deploy:symlink', 'combell:reloadPHP');
 
 /** Clear OPcode cache */
-after('deploy:symlink', 'cachetool:clear:opcache');
+after('deploy:symlink', 'combell:reset_opcode_cache');
 
 /** Cache ACF fields */
-after('deploy:symlink', 'acorn:acf_cache');
+after('deploy:symlink', fn () => runWpQuery('wp acorn acf:cache'));
 
 /** Optimize acorn */
-after('deploy:symlink', 'acorn:optimize');
+after('deploy:symlink', fn () => runWpQuery('wp acorn optimize'));
 
-/** Reload cache & preload */
-after('deploy:symlink', 'wp_rocket:clear_cache');
+/** Clean WP Rocket */
+after('deploy:symlink', fn () => runWpQuery('wp rocket regenerate --file=advanced-cache'));
+after('deploy:symlink', fn () => runWpQuery('wp rocket clean --confirm'));
 
-/** Reload cache & preload */
-after('deploy:symlink', 'wp_rocket:preload_cache');
+/** Preload WP Rocket */
+after('deploy:symlink', fn () => runWpQuery('wp rocket preload'));
 
 /** Remove unused themes */
-after('deploy:cleanup', 'cleanup:unused_themes');
+after('deploy:cleanup', 'wp:remove_unused_themes');
 
 /** Unlock deploy */
 after('deploy:failed', 'deploy:unlock');
+```
+
+## Runcloud Hub
+
+```php
+/** Purge all caches */
+after('deploy:symlink', fn () => runWpQuery('wp runcloud-hub purgeall'));
+```
+
+```php
+/** Update dropin */
+after('deploy:symlink', fn () => runWpQuery('wp runcloud-hub update-dropin'));
 ```
 
 ## WordPress
 
 ```php
 /** Flush object cache */
-after('deploy:symlink', fn () => runWpQuery('cache flush'));
+after('deploy:symlink', fn () => runWpQuery('wp cache flush'));
 ```
 
 ## WooCommerce
 
 ```php
 /** Update WooCommerce tables */
-after('deploy:symlink', 'woocommerce:update_database');
+after('deploy:symlink', fn () => runWpQuery('wp wc update'));
 ```
 
 ## Extra commands
@@ -144,7 +178,7 @@ dep wordfence:default_configuration
 #### Add .htaccess rules for security
 
 ```bash
-dep otomaties:htaccess_rules
+dep htaccess:add_all_rules
 ```
 
 ### Database handling
@@ -222,5 +256,5 @@ dep wp:cli --cmd="wp login create {login}" # Create login
 #### Set admin email
 
 ```bash
-dep wp:cli --cmd="wp option update admin_email {emailaddress} --autoload=yes" # Change admin emailaddress
+dep wp:cli --cmd="wp option update admin_email {emailaddress} --autoload=yes" # Create login
 ```

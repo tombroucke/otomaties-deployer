@@ -2,9 +2,48 @@
 
 namespace Deployer;
 
+require_once __DIR__ . '/../functions.php';
+
+if (! file_exists('config/application.php')) {
+    throw new \RuntimeException('`config/application.php` is missing. Please ensure you are in a Bedrock project directory.');
+}
+
+$webRoot = \collect([
+    'web',
+    'www',
+])
+    ->filter(fn ($dir) => is_dir($dir) && file_exists("{$dir}/wp-config.php"))
+    ->first();
+
+if (! $webRoot) {
+    throw new \RuntimeException('No web root found. Please ensure you are in a Bedrock project directory.');
+}
+
+set('web_root', $webRoot);
+
+/** Shared files */
+add('shared_files', [
+    '.env',
+    '{{ web_root }}/.htaccess',
+    '{{ web_root }}/.htpasswd',
+    '{{ web_root }}/.user.ini',
+    '{{ web_root }}/app/object-cache.php',
+    '{{ web_root }}/app/wp-cache-config.php',
+]);
+
+/** Shared directories */
+add('shared_dirs', [
+    '{{ web_root }}/app/blogs.dir',
+    '{{ web_root }}/app/ewww',
+    '{{ web_root }}/app/fonts',
+    '{{ web_root }}/app/languages/wpml',
+    '{{ web_root }}/app/uploads',
+    '{{ web_root }}/app/wflogs',
+    '{{ web_root }}/app/wp-rocket-config',
+]);
+
 desc('Makes sure, .env file for Bedrock is available');
 task('bedrock:create_env', function () {
-
     // Check if url is set
     $url = rtrim(get('url'), '/');
     if (! $url || $url == '') {
@@ -68,7 +107,7 @@ task('bedrock:create_env', function () {
         echo PHP_EOL;
 
         foreach ($salt_keys as $key) {
-            echo $key . "='" . generate_salt() . "'" . PHP_EOL;
+            echo $key . "='" . generateSalt() . "'" . PHP_EOL;
         }
 
         $content = ob_get_clean();
@@ -77,31 +116,4 @@ task('bedrock:create_env', function () {
     } else {
         writeln('<comment>.env file already exists</comment>');
     }
-});
-
-desc('Upload auth.json to remote');
-task('bedrock:upload_auth_json', function () {
-    $authJsonPath = 'auth.json';
-
-    if (file_exists($authJsonPath)) {
-        upload($authJsonPath, '{{release_path}}/auth.json');
-    }
-});
-
-desc('Remove auth.json from remote');
-task('bedrock:remove_auth_json', function () {
-    run('rm {{release_path}}/auth.json');
-});
-
-function generate_salt()
-{
-    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%^&*()-_[]{}<>~+=,.;:/?|';
-    $char_option_length = strlen($chars) - 1;
-
-    $password = '';
-    for ($i = 0; $i < 64; $i++) {
-        $password .= substr($chars, random_int(0, $char_option_length), 1);
-    }
-
-    return $password;
-}
+})->oncePerNode();

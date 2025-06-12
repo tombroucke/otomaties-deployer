@@ -1,25 +1,26 @@
 {
-    "name": "tombroucke/otomaties-deployer",
-    "description": "Deploy Bedrock & Sage",
-    "type": "library",
-    "authors": [
-        {
-            "name": "Tom Broucke",
-            "email": "tom@tombroucke.be"
-        }
-    ],
-    "require": {
-        "php": "^8.0",
-        "vlucas/phpdotenv": "^5.4",
-        "deployer/deployer": "^7.0"
-    },
-    "require-dev": {
-        "squizlabs/php_codesniffer": "^3.7",
-        "laravel/pint": "^1.21"
-    },
-    "scripts": {
-        "test": [
-            "phpcs --standard=PSR2 --exclude=PSR1.Files.SideEffects recipes"
-        ]
+  "name": "tombroucke/otomaties-deployer",
+  "description": "Deploy Bedrock & Sage",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Tom Broucke",
+      "email": "tom@tombroucke.be"
     }
+  ],
+  "require": {
+    "php": "^8.0",
+    "vlucas/phpdotenv": "^5.4",
+    "deployer/deployer": "^7.0",
+    "illuminate/support": "*"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.7",
+    "laravel/pint": "^1.21"
+  },
+  "scripts": {
+    "test": [
+      "phpcs --standard=PSR2 --exclude=PSR1.Files.SideEffects recipes"
+    ]
+  }
 }
