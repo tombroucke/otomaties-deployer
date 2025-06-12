@@ -33,7 +33,7 @@ function runWpQuery($cmd, $path = '{{release_path}}')
 
 function runWpDbQuery($filename)
 {
-    $query = file_get_contents(__DIR__ . '/snippets/' . ltrim($filename, '/') . '.sql');
+    $query = file_get_contents(__DIR__.'/snippets/'.ltrim($filename, '/').'.sql');
 
     // Extracting placeholders and default values
     preg_match_all('/{{\s(.*?)(?::(.*?))?\s}}/', $query, $matches, PREG_SET_ORDER);
@@ -102,7 +102,5 @@ function cleanPath($path)
     return Str::of($path)
         ->replace(['\\', '//'], '/')
         ->replace(['../', './'], '')
-        ->rtrim('/')
-        ->append('/')
         ->toString();
 }

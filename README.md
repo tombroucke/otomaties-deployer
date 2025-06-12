@@ -269,7 +269,7 @@ dep wp:cli --cmd="wp option update admin_email {emailaddress} --autoload=yes" # 
 
 ### From v1.x to v2.x
 
-There is a script included to automatically update from v1.x to v2.x. Require this script in your old deploy.php script, and we will try to fix the file automatically.
+There is a script included to automatically update from v1.x to v2.x. Require this script in your old deploy.php script, and we will try to fix the file automatically. Run `dep` after adding this line.
 
 ```php
 require 'vendor/tombroucke/otomaties-deployer/update/2.x.php';
