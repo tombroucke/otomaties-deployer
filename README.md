@@ -24,12 +24,12 @@ require_once 'recipe/composer.php';
     ->load();
 
 require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/functions.php';
-require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/acorn.php';
 require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/auth.php';
 require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/bedrock.php';
 require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/combell.php';
 require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/composer.php';
 require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/database.php';
+require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/htaccess.php';
 require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/opcode.php';
 require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/otomaties.php';
 require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/sage.php';
