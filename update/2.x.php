@@ -21,7 +21,7 @@ $contents = str_replace(
 if (strpos($contents, 'sage:check') === false) {
     $contents = preg_replace(
         '/\/\*\* Install theme dependencies \*\//',
-        '/** Check if everything is set for sage */'.PHP_EOL.'after(\'deploy:vendors\', \'sage:check\');'.PHP_EOL.PHP_EOL.'$0',
+        '/** Check if everything is set for sage */'.PHP_EOL.'before(\'deploy:prepare\', \'sage:check\');'.PHP_EOL.PHP_EOL.'$0',
         $contents
     );
 }
