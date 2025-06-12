@@ -14,6 +14,7 @@ Use `dep deploy production --skip-ssl-verify` to deploy a website without a SSL 
 
 ```php
 <?php
+
 namespace Deployer;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -23,18 +24,22 @@ require_once 'recipe/composer.php';
 (\Dotenv\Dotenv::createImmutable(__DIR__))
     ->load();
 
-require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/functions.php';
-require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/auth.php';
-require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/bedrock.php';
-require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/combell.php';
-require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/composer.php';
-require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/database.php';
-require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/htaccess.php';
-require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/opcode.php';
-require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/otomaties.php';
-require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/sage.php';
-require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/wordfence.php';
-require_once __DIR__ . '/vendor/tombroucke/otomaties-deployer/recipes/wp.php';
+collect([
+    'functions.php',
+    'recipes/auth.php',
+    'recipes/bedrock.php',
+    'recipes/combell.php',
+    'recipes/composer.php',
+    'recipes/database.php',
+    'recipes/opcode.php',
+    'recipes/otomaties.php',
+    'recipes/sage.php',
+    'recipes/wordfence.php',
+    'recipes/wp.php',
+])
+    ->map(fn ($file) => __DIR__ . '/vendor/tombroucke/otomaties-deployer/' . $file)
+    ->filter(fn ($file) => file_exists($file))
+    ->each(fn ($file) => require_once $file);
 
 /** Config */
 set('application', 'example.com');
