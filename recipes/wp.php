@@ -27,6 +27,8 @@ task('wp:cli', function () {
         'wp core is-installed',
         'wp core update-db',
         'wp core version',
+        'wp config get',
+        'wp config get {config_variable:DB_NAME}',
         'wp cron test',
         'wp db check',
         'wp db optimize',
@@ -84,6 +86,21 @@ task('wp:cli', function () {
             'manage_instagram_feed_options',
             'gform_full_access',
         ],
+        'config_variable' => [
+            'DB_NAME',
+            'DB_USER',
+            'DB_PASSWORD',
+            'DB_HOST',
+            'DB_CHARSET',
+            'DB_COLLATE',
+            'WP_DEBUG',
+            'WP_DEBUG_LOG',
+            'WP_DEBUG_DISPLAY',
+            'WP_HOME',
+            'WP_SITEURL',
+            'WP_ENV',
+            'table_prefix',
+        ],
         'package_name' => [
             'aaemnnosttv/wp-cli-login-command',
             'tombroucke/wp-rocket-cli',
@@ -92,8 +109,8 @@ task('wp:cli', function () {
             'yes',
             'no',
         ],
-        'plugin_name' => fn() => array_map(
-            fn($plugin) => basename($plugin, '.php'),
+        'plugin_name' => fn () => array_map(
+            fn ($plugin) => basename($plugin, '.php'),
             glob($webRoot . '/app/plugins/*'),
         ),
         'post_type' => [

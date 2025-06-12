@@ -18,12 +18,11 @@ function createFileIfNotExists($path): bool
 
 function runWpQuery($cmd, $path = '{{release_path}}')
 {
-    if (! str_starts_with($cmd, 'wp ')) {
-        $cmd = "wp {$cmd}";
-    }
+    $cmd = str_starts_with($cmd, 'wp ') ? $cmd : "wp {$cmd}";
 
     writeln("<info>Running WP CLI command:</info> <comment>{$cmd}</comment> in <comment>{$path}</comment>");
-    within($path, function () use ($cmd) {
+
+    return within($path, function () use ($cmd) {
         return run(
             command: $cmd,
             real_time_output: true,
@@ -31,10 +30,8 @@ function runWpQuery($cmd, $path = '{{release_path}}')
     });
 }
 
-function runWpDbQuery($filename)
+function replacePlaceholders($query)
 {
-    $query = file_get_contents(__DIR__.'/snippets/'.ltrim($filename, '/').'.sql');
-
     // Extracting placeholders and default values
     preg_match_all('/{{\s(.*?)(?::(.*?))?\s}}/', $query, $matches, PREG_SET_ORDER);
 
@@ -51,14 +48,24 @@ function runWpDbQuery($filename)
         if (get($key) && get($key) !== '') {
             $value = get($key);
         } else {
+            $defaultValue = filled($defaultValue) ? $defaultValue : null;
             $value = ask("Enter a value for {$key}", $defaultValue);
         }
         $query = str_replace($replace, $value, $query);
     }
 
-    $query = trim(str_replace("'", '"', $query));
+    return trim(str_replace("'", '"', $query));
+}
 
-    runWpQuery("wp db query '{$query}'");
+function runWpDbQuery($filename)
+{
+    $webRoot = get('web_root');
+    $deployPath = get('deploy_path');
+    $query = file_get_contents(__DIR__ . '/snippets/' . ltrim($filename, '/') . '.sql');
+
+    $replacedQuery = replacePlaceholders($query);
+
+    runWpQuery("wp db query '{$replacedQuery}'", cleanPath("{$deployPath}/current/{$webRoot}/wp"));
 }
 
 function requestHeaders()

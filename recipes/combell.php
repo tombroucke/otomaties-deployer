@@ -85,7 +85,7 @@ task('combell:reloadPHP', function () {
         $iterations++;
     }
 
-    writeln('reloadPHP.sh has finished');
+    writeln('<info>✓</info> reloadPHP.sh has finished');
 
     // Clean up
     run("rm {$reloadedFileCheckPath}");

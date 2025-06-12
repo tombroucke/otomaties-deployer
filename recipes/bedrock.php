@@ -12,7 +12,7 @@ $webRoot = \collect([
     'web',
     'www',
 ])
-    ->filter(fn($dir) => is_dir($dir) && file_exists("{$dir}/wp-config.php"))
+    ->filter(fn ($dir) => is_dir($dir) && file_exists("{$dir}/wp-config.php"))
     ->first();
 
 if (! $webRoot) {
@@ -51,11 +51,12 @@ task('bedrock:create_env', function () {
     }
 
     $deployPath = get('deploy_path');
-    if (! test("[ -f {$deployPath}/shared/.env ]")) {
-        run("mkdir -p {$deployPath}/shared/ && touch {$deployPath}/shared/.env");
+    $envPath = "{$deployPath}/shared/.env";
+    if (! test("[ -f {$envPath} ]")) {
+        createFileIfNotExists($envPath);
 
         // Keys that require a salt token
-        $salt_keys = [
+        $saltKeys = [
             'AUTH_KEY',
             'SECURE_AUTH_KEY',
             'LOGGED_IN_KEY',
@@ -106,7 +107,7 @@ task('bedrock:create_env', function () {
 
         echo PHP_EOL;
 
-        foreach ($salt_keys as $key) {
+        foreach ($saltKeys as $key) {
             echo $key . "='" . generateSalt() . "'" . PHP_EOL;
         }
 

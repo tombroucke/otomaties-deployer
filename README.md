@@ -209,6 +209,19 @@ dep wordfence:firewall_setup
 > [!WARNING]
 > The website needs to be be fully installed before you can run this command
 
+You can overwrite the default config
+
+```php
+/** Wordfence */
+set('wordfence/config', get('wordfence/config')
+    ->merge([
+        'alertEmails' => 'info@example.com',
+        'max_login_failures' => '3',
+        'max_forgot_password' => '3',
+    ])
+);
+```
+
 ```bash
 dep wordfence:default_configuration
 ```
