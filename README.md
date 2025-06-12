@@ -235,19 +235,19 @@ dep htaccess:add_all_rules
 #### Pull database from production
 
 ```bash
-dep db:pull production
+dep wp:db:pull production
 ```
 
 #### Download database
 
 ```bash
-dep db:download production
+dep wp:db:download production
 ```
 
 #### Push database to staging
 
 ```bash
-dep db:push staging
+dep wp:db:push staging
 ```
 
 ### WordPress
