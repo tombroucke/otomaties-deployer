@@ -101,18 +101,22 @@ $contents = str_replace(
 );
 
 $contents .= PHP_EOL."/** Aliases */
+desc('Cache the ACF Composer field groups and blocks');
 task('wp:acorn:acf:cache', function () {
     runWpQuery('wp acorn acf:cache');
 });
 
+desc('Cache framework bootstrap, configuration, and metadata to increase performance');
 task('wp:acorn:optimize', function () {
     runWpQuery('wp acorn optimize');
 });
 
+desc('Regenerate advanced-cache.php and clean the cache');
 task('wp:rocket:clean', function () {
     runWpQuery('wp rocket regenerate --file=advanced-cache && wp rocket clean --confirm');
 });
 
+desc('Preload the cache');
 task('wp:rocket:preload', function () {
     runWpQuery('wp rocket preload');
 });";
