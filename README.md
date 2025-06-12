@@ -41,6 +41,7 @@ set('application', 'example.com');
 set('repository', 'git@github.com:username/example.com.git');
 
 /** Sage */
+set('sage/build_command', 'build'); // build:production for mix
 set('sage/theme_path', 'app/themes/example');
 
 /** Hosts */
