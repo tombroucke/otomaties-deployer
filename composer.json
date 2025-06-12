@@ -15,12 +15,6 @@
     "illuminate/support": "*"
   },
   "require-dev": {
-    "squizlabs/php_codesniffer": "^3.7",
     "laravel/pint": "^1.21"
-  },
-  "scripts": {
-    "test": [
-      "phpcs --standard=PSR2 --exclude=PSR1.Files.SideEffects recipes"
-    ]
   }
 }
