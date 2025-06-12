@@ -26,7 +26,7 @@ function runWpQuery($cmd, $path = '{{release_path}}')
     within($path, function () use ($cmd) {
         return run(
             command: $cmd,
-            real_time_output: true
+            real_time_output: true,
         );
     });
 }

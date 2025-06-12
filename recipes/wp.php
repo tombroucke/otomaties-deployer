@@ -92,9 +92,9 @@ task('wp:cli', function () {
             'yes',
             'no',
         ],
-        'plugin_name' => fn () => array_map(
-            fn ($plugin) => basename($plugin, '.php'),
-            glob($webRoot . '/app/plugins/*')
+        'plugin_name' => fn() => array_map(
+            fn($plugin) => basename($plugin, '.php'),
+            glob($webRoot . '/app/plugins/*'),
         ),
         'post_type' => [
             'page',

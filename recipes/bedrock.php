@@ -12,7 +12,7 @@ $webRoot = \collect([
     'web',
     'www',
 ])
-    ->filter(fn ($dir) => is_dir($dir) && file_exists("{$dir}/wp-config.php"))
+    ->filter(fn($dir) => is_dir($dir) && file_exists("{$dir}/wp-config.php"))
     ->first();
 
 if (! $webRoot) {
