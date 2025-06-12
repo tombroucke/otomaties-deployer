@@ -43,20 +43,18 @@ if (strpos($contents, 'composer:remove_auth_json') === false) {
 }
 
 $simpleReplacements = [
-    '\'acorn:acf_cache\'' => 'fn () => runWpQuery(\'wp acorn acf:cache\')',
-    '\'acorn:optimize\'' => 'fn () => runWpQuery(\'wp acorn optimize\')',
-    '\'wp_rocket:clear_cache\'' => 'fn () => runWpQuery(\'wp rocket regenerate --file=advanced-cache && wp rocket clean --confirm\')',
-    '\'wp_rocket:preload_cache\'' => 'fn () => runWpQuery(\'wp rocket preload\')',
+    'acorn:acf_cache' => 'wp:acorn:acf:cache',
+    'acorn:optimize' => 'wp:acorn:optimize',
+    'wp_rocket:clear_cache' => 'wp:rocket:clean',
+    'wp_rocket:preload_cache' => 'wp:rocket:preload',
     'cleanup:unused_themes' => 'wp:remove_unused_themes',
-    '\'runcloud-hub:update-dropin\'' => 'fn () => runWpQuery(\'wp runcloud-hub update-dropin\')',
-    '\'runcloud-hub:purgeall\'' => 'fn () => runWpQuery(\'wp runcloud-hub purgeall\')',
 ];
 
 $contents = str_replace(array_keys($simpleReplacements), array_values($simpleReplacements), $contents);
 
 $contents = str_replace(
     [
-        'require \'vendor/tombroucke/otomaties-deployer/update.php\';'.PHP_EOL,
+        'require \'vendor/tombroucke/otomaties-deployer/update/2.x.php\';'.PHP_EOL,
         'require_once \'vendor/tombroucke/otomaties-deployer/update.php\';'.PHP_EOL,
     ],
     [],
@@ -101,7 +99,26 @@ $contents = str_replace(
     $contents
 );
 
+$contents .= PHP_EOL."/** Aliases */
+task('wp:acorn:acf:cache', function () {
+    runWpQuery('wp acorn acf:cache');
+});
+
+task('wp:acorn:optimize', function () {
+    runWpQuery('wp acorn optimize');
+});
+
+task('wp:rocket:clean', function () {
+    runWpQuery('wp rocket regenerate --file=advanced-cache && wp rocket clean --confirm');
+});
+
+task('wp:rocket:preload', function () {
+    runWpQuery('wp rocket preload');
+});";
+
 // write the modified contents back to deploy.php
 if (file_put_contents($deployFile, $contents) === false) {
     throw new \RuntimeException('Failed to write to `'.$deployFile.'`.');
 }
+
+throw new \RuntimeException('`'.$deployFile.'` has been updated to the new 2.x format. Please check the file for any additional changes that may be required. Re-run your command.');

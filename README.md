@@ -91,49 +91,81 @@ after('deploy:symlink', 'combell:reloadPHP');
 after('deploy:symlink', 'combell:reset_opcode_cache');
 
 /** Cache ACF fields */
-after('deploy:symlink', fn () => runWpQuery('wp acorn acf:cache'));
+after('deploy:symlink', 'wp:acorn:acf:cache');
 
 /** Optimize acorn */
-after('deploy:symlink', fn () => runWpQuery('wp acorn optimize'));
+after('deploy:symlink', 'wp:acorn:optimize');
 
-/** Clean WP Rocket */
-after('deploy:symlink', fn () => runWpQuery('wp rocket regenerate --file=advanced-cache'));
-after('deploy:symlink', fn () => runWpQuery('wp rocket clean --confirm'));
+/** Reload cache & preload */
+after('deploy:symlink', 'wp:rocket:clean');
 
-/** Preload WP Rocket */
-after('deploy:symlink', fn () => runWpQuery('wp rocket preload'));
+/** Reload cache & preload */
+after('deploy:symlink', 'wp:rocket:preload');
 
 /** Remove unused themes */
 after('deploy:cleanup', 'wp:remove_unused_themes');
 
 /** Unlock deploy */
 after('deploy:failed', 'deploy:unlock');
+
+/** Aliases */
+task('wp:acorn:acf:cache', function () {
+    runWpQuery('wp acorn acf:cache');
+});
+
+task('wp:acorn:optimize', function () {
+    runWpQuery('wp acorn optimize');
+});
+
+task('wp:rocket:clean', function () {
+    runWpQuery('wp rocket regenerate --file=advanced-cache && wp rocket clean --confirm');
+});
+
+task('wp:rocket:preload', function () {
+    runWpQuery('wp rocket preload');
+});
 ```
 
 ## Runcloud Hub
 
 ```php
 /** Update dropin */
-after('deploy:symlink', fn () => runWpQuery('wp runcloud-hub update-dropin'));
+after('deploy:symlink', 'wp:runcloud-hub:update-dropin');
+
+task('wp:runcloud-hub:update-dropin', function () {
+    runWpQuery('wp runcloud-hub update-dropin');
+});
 ```
 
 ```php
 /** Purge all caches */
-after('deploy:symlink', fn () => runWpQuery('wp runcloud-hub purgeall'));
+after('deploy:symlink', 'wp:runcloud-hub:purgeall');
+
+task('wp:runcloud-hub:purgeall', function () {
+    runWpQuery('wp runcloud-hub purgeall');
+});
 ```
 
 ## WordPress
 
 ```php
 /** Flush object cache */
-after('deploy:symlink', fn () => runWpQuery('wp cache flush'));
+after('deploy:symlink', 'wp:cache:flush');
+
+task('wp:cache:flush', function () {
+    runWpQuery('wp cache flush');
+});
 ```
 
 ## WooCommerce
 
 ```php
 /** Update WooCommerce tables */
-after('deploy:symlink', fn () => runWpQuery('wp wc update'));
+after('deploy:symlink', 'wp:wc:update');
+
+task('wp:wc:update', function () {
+    runWpQuery('wp wc update');
+});
 ```
 
 ## Extra commands
