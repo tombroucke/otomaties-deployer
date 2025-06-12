@@ -113,13 +113,13 @@ after('deploy:failed', 'deploy:unlock');
 ## Runcloud Hub
 
 ```php
-/** Purge all caches */
-after('deploy:symlink', fn () => runWpQuery('wp runcloud-hub purgeall'));
+/** Update dropin */
+after('deploy:symlink', fn () => runWpQuery('wp runcloud-hub update-dropin'));
 ```
 
 ```php
-/** Update dropin */
-after('deploy:symlink', fn () => runWpQuery('wp runcloud-hub update-dropin'));
+/** Purge all caches */
+after('deploy:symlink', fn () => runWpQuery('wp runcloud-hub purgeall'));
 ```
 
 ## WordPress
@@ -263,4 +263,14 @@ dep wp:cli --cmd="wp login create {login}" # Create login
 
 ```bash
 dep wp:cli --cmd="wp option update admin_email {emailaddress} --autoload=yes" # Create login
+```
+
+## Upgrading
+
+### From v1.x to v2.x
+
+There is a script included to automatically update from v1.x to v2.x. Require this script in your old deploy.php script, and we will try to fix the file automatically.
+
+```php
+require 'vendor/tombroucke/otomaties-deployer/update/2.x.php';
 ```
