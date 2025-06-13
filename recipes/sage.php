@@ -37,7 +37,7 @@ task('sage:check', function () {
         writeln('<info>✓</info> The theme path `' . $sageThemePath . '` exists.');
     }
 
-    if (testLocally('[ -f {{sage/theme_path}}/{{sage/public_dir}}/hot ]')) {
+    if (testLocally("[ -f $sageThemePath/{{sage/public_dir}}/hot ]")) {
         throw new \RuntimeException('Vite is running hot. Please stop the dev server before deploying.');
     } else {
         writeln('<info>✓</info> Vite is not running hot. You can deploy safely.');
