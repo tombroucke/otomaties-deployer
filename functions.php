@@ -57,20 +57,10 @@ function replacePlaceholders($query)
     return trim(str_replace("'", '"', $query));
 }
 
-function runWpDbQuery($filename)
-{
-    $webRoot = get('web_root');
-    $deployPath = get('deploy_path');
-    $query = file_get_contents(__DIR__ . '/snippets/' . ltrim($filename, '/') . '.sql');
-
-    $replacedQuery = replacePlaceholders($query);
-
-    runWpQuery("wp db query '{$replacedQuery}'", cleanPath("{$deployPath}/current/{$webRoot}/wp"));
-}
-
 function requestHeaders()
 {
     $headers = [];
+
     $basicAuthUser = get('basic_auth_user');
     $basicAuthPass = get('basic_auth_pass');
 
@@ -80,15 +70,6 @@ function requestHeaders()
     }
 
     return $headers;
-}
-
-function createSlug(string $string): string
-{
-    $string = strtolower($string);
-    $string = preg_replace('/[^a-z0-9\s-]/', '', $string);
-    $string = preg_replace('/[\s-]+/', '-', trim($string));
-
-    return $string;
 }
 
 function generateSalt()

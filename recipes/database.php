@@ -2,6 +2,8 @@
 
 namespace Deployer;
 
+use Illuminate\Support\Str;
+
 require_once __DIR__ . '/../functions.php';
 
 desc('Pull Database');
@@ -69,7 +71,7 @@ desc('Download Database');
 task('wp:db:download', function () {
     $date = date('Y-m-d_H-i-s');
     $uniqueId = uniqid();
-    $dbFilename = createSlug(get('application')) . "-{$date}-{$uniqueId}.sql";
+    $dbFilename = Str::slug(get('application')) . "-{$date}-{$uniqueId}.sql";
     $remoteDbFilePath = get('deploy_path') . '/' . $dbFilename;
     $downloadDir = ask('Download directory', getenv('HOME') . '/Downloads');
     $tmpFile = "{$downloadDir}/{$dbFilename}";
