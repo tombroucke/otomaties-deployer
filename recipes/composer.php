@@ -1,6 +1,14 @@
 <?php
 
-namespace Deployer;
+namespace Otomaties\Deployer\Recipes\Composer;
+
+use function Deployer\ask;
+use function Deployer\askHiddenResponse;
+use function Deployer\desc;
+use function Deployer\run;
+use function Deployer\runLocally;
+use function Deployer\task;
+use function Deployer\upload;
 
 require_once __DIR__ . '/../functions.php';
 

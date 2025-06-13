@@ -1,8 +1,15 @@
 <?php
 
-namespace Deployer;
+namespace Otomaties\Deployer;
 
 use Illuminate\Support\Str;
+
+use function Deployer\ask;
+use function Deployer\get;
+use function Deployer\run;
+use function Deployer\test;
+use function Deployer\within;
+use function Deployer\writeln;
 
 function createFileIfNotExists(string $path): bool
 {

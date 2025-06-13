@@ -1,8 +1,21 @@
 <?php
 
-namespace Deployer;
+namespace Otomaties\Deployer\Recipes\Database;
 
 use Illuminate\Support\Str;
+
+use function Deployer\ask;
+use function Deployer\askConfirmation;
+use function Deployer\desc;
+use function Deployer\download;
+use function Deployer\get;
+use function Deployer\run;
+use function Deployer\runLocally;
+use function Deployer\task;
+use function Deployer\test;
+use function Deployer\upload;
+use function Deployer\writeln;
+use function Otomaties\Deployer\cleanPath;
 
 require_once __DIR__ . '/../functions.php';
 

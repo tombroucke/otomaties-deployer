@@ -1,6 +1,17 @@
 <?php
 
-namespace Deployer;
+namespace Otomaties\Deployer\Recipes\Wordfence;
+
+use function Deployer\desc;
+use function Deployer\get;
+use function Deployer\run;
+use function Deployer\set;
+use function Deployer\task;
+use function Deployer\writeln;
+use function Otomaties\Deployer\cleanPath;
+use function Otomaties\Deployer\createFileIfNotExists;
+use function Otomaties\Deployer\replacePlaceholders;
+use function Otomaties\Deployer\runWpQuery;
 
 require_once __DIR__ . '/../functions.php';
 

@@ -1,6 +1,14 @@
 <?php
 
-namespace Deployer;
+namespace Otomaties\Deployer\Recipes\Htaccess;
+
+use function Deployer\desc;
+use function Deployer\get;
+use function Deployer\run;
+use function Deployer\task;
+use function Deployer\test;
+use function Otomaties\Deployer\cleanPath;
+use function Otomaties\Deployer\createFileIfNotExists;
 
 require_once __DIR__ . '/../functions.php';
 

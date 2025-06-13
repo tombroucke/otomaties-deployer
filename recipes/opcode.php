@@ -1,8 +1,18 @@
 <?php
 
-namespace Deployer;
+namespace Otomaties\Deployer\Recipes\Opcode;
 
 use Deployer\Utility\Httpie;
+
+use function Deployer\desc;
+use function Deployer\get;
+use function Deployer\input;
+use function Deployer\option;
+use function Deployer\run;
+use function Deployer\task;
+use function Deployer\writeln;
+use function Otomaties\Deployer\cleanPath;
+use function Otomaties\Deployer\requestHeaders;
 
 require_once __DIR__ . '/../functions.php';
 

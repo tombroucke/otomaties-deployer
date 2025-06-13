@@ -1,6 +1,12 @@
 <?php
 
-namespace Deployer;
+namespace Otomaties\Deployer\Recipes\Otomaties;
+
+use function Deployer\desc;
+use function Deployer\get;
+use function Deployer\run;
+use function Deployer\task;
+use function Otomaties\Deployer\cleanPath;
 
 require_once __DIR__ . '/../functions.php';
 

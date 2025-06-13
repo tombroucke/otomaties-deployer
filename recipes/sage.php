@@ -1,10 +1,21 @@
 <?php
 
-namespace Deployer;
+namespace Otomaties\Deployer\Recipes\Sage;
 
 use Illuminate\Support\Str;
 
-require_once __DIR__.'/../functions.php';
+use function Deployer\desc;
+use function Deployer\get;
+use function Deployer\has;
+use function Deployer\run;
+use function Deployer\runLocally;
+use function Deployer\set;
+use function Deployer\task;
+use function Deployer\testLocally;
+use function Deployer\upload;
+use function Deployer\writeln;
+
+require_once __DIR__ . '/../functions.php';
 
 set('sage/public_dir', 'public');
 set('sage/build_command', 'build');
@@ -17,13 +28,13 @@ task('sage:check', function () {
     if (! has('sage/theme_path')) {
         throw new \RuntimeException('The "sage/theme_path" variable is not set. Please set it in your deployer configuration.');
     } else {
-        writeln('<info>✓</info> The "sage/theme_path" variable is set to: `'.$sageThemePath.'`');
+        writeln('<info>✓</info> The "sage/theme_path" variable is set to: `' . $sageThemePath . '`');
     }
 
     if (! testLocally("[ -d $sageThemePath ]")) {
-        throw new \RuntimeException('The theme path `'.$sageThemePath.'` does not exist.');
+        throw new \RuntimeException('The theme path `' . $sageThemePath . '` does not exist.');
     } else {
-        writeln('<info>✓</info> The theme path `'.$sageThemePath.'` exists.');
+        writeln('<info>✓</info> The theme path `' . $sageThemePath . '` exists.');
     }
 
     if (testLocally('[ -f {{sage/theme_path}}/{{sage/public_dir}}/hot ]')) {
@@ -73,8 +84,8 @@ function prependedSageThemePath(): ?string
 
     return Str::of($themePath)
         ->trim('/')
-        ->replaceFirst($webRoot.'/', '')
-        ->prepend($webRoot.'/')
+        ->replaceFirst($webRoot . '/', '')
+        ->prepend($webRoot . '/')
         ->trim('/')
         ->toString();
 }
