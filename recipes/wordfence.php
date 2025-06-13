@@ -218,16 +218,14 @@ task('wordfence:default_configuration', function () {
 
     $notInstalledMsg = 'Wordfence not activated';
 
-    $query = 'if (class_exists(\'wfConfig\')) {' . $query->implode('') . '} else { echo \"' . $notInstalledMsg . '\"; }';
-
     $result = runWpQuery(
-        cmd: 'wp eval "' . $query . '"',
+        cmd: 'wp eval "if (class_exists(\'wfConfig\')) {' . $query->implode('') . '} else { echo \"' . $notInstalledMsg . '\"; }"',
         path: cleanPath("{$deployPath}/current/{$webRoot}/wp")
     );
 
-    if ($result === $notInstalledMsg) {
-        writeln('<error>Wordfence is not activated. Skipping default configuration.</error>');
+    if (str_contains($result, $notInstalledMsg)) {
+        writeln('<error>Wordfence is not installed or activated. Please install and activate Wordfence first.</error>');
     } else {
-        writeln('<info>✓</info> Wordfence default configuration applied successfully.');
+        writeln('<info>✓</info> Wordfence configuration set successfully.');
     }
 });
