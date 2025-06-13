@@ -16,7 +16,6 @@
   },
   "require-dev": {
     "laravel/pint": "^1.21",
-    "phpstan/phpstan": "^2.1",
-    "phpstan/phpstan-symfony": "^2.0"
+    "phpstan/phpstan": "^2.1"
   }
 }

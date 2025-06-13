@@ -17,7 +17,7 @@ use function Deployer\upload;
 use function Deployer\writeln;
 use function Otomaties\Deployer\cleanPath;
 
-require_once __DIR__.'/../functions.php';
+require_once __DIR__ . '/../functions.php';
 
 desc('Pull Database');
 task('wp:db:pull', function () {
@@ -25,7 +25,7 @@ task('wp:db:pull', function () {
     $date = date('Y-m-d_H-i-s');
     $uniqueId = uniqid();
     $dbFilename = "db-{$date}-{$uniqueId}.sql";
-    $remoteDbFilePath = get('deploy_path').'/'.$dbFilename;
+    $remoteDbFilePath = get('deploy_path') . '/' . $dbFilename;
     $tmpDir = sys_get_temp_dir();
     $tmpFile = "{$tmpDir}/{$dbFilename}";
     $webRoot = get('web_root');
@@ -51,12 +51,12 @@ task('wp:db:pull', function () {
         // import database locally
         $localWpPath = cleanPath("{$webRoot}/wp");
         $importCommand = "wp db import {$tmpFile} --allow-root --path={$localWpPath}";
-        writeln('Importing database locally using command: '.$importCommand);
+        writeln('Importing database locally using command: ' . $importCommand);
         runLocally($importCommand);
 
         // Replace url
         $searchReplaceCommand = "wp search-replace {{url}} {$localUrl} --allow-root --path={$localWpPath}";
-        writeln('Replacing urls locally using command: '.$searchReplaceCommand);
+        writeln('Replacing urls locally using command: ' . $searchReplaceCommand);
         runLocally($searchReplaceCommand);
     } catch (\Throwable $th) {
         $message = $th->getMessage();
@@ -84,9 +84,9 @@ desc('Download Database');
 task('wp:db:download', function () {
     $date = date('Y-m-d_H-i-s');
     $uniqueId = uniqid();
-    $dbFilename = Str::slug(get('application'))."-{$date}-{$uniqueId}.sql";
-    $remoteDbFilePath = get('deploy_path').'/'.$dbFilename;
-    $downloadDir = ask('Download directory', getenv('HOME').'/Downloads');
+    $dbFilename = Str::slug(get('application')) . "-{$date}-{$uniqueId}.sql";
+    $remoteDbFilePath = get('deploy_path') . '/' . $dbFilename;
+    $downloadDir = ask('Download directory', getenv('HOME') . '/Downloads');
     $tmpFile = "{$downloadDir}/{$dbFilename}";
     $webRoot = get('web_root');
 
@@ -135,7 +135,7 @@ task('wp:db:push', function () {
     $date = date('Y-m-d_H-i-s');
     $uniqueId = uniqid();
     $dbFilename = "db-{$date}-{$uniqueId}.sql";
-    $remoteDbFilePath = get('deploy_path').'/'.$dbFilename;
+    $remoteDbFilePath = get('deploy_path') . '/' . $dbFilename;
     $tmpDir = sys_get_temp_dir();
     $tmpFile = "{$tmpDir}/{$dbFilename}";
     $webRoot = get('web_root');

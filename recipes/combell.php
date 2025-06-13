@@ -18,8 +18,8 @@ use function Otomaties\Deployer\basicAuthRequestHeaders;
 use function Otomaties\Deployer\Recipes\Opcode\opcodeCacheHasBeenReset;
 use function Otomaties\Deployer\url;
 
-require_once __DIR__.'/../functions.php';
-require_once __DIR__.'/opcode.php';
+require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/opcode.php';
 
 option('skip-ssl-verify');
 
@@ -29,11 +29,11 @@ task('combell:host_symlink', function () {
     $deployPath = get('deploy_path');
     $webRoot = get('web_root');
     $fullWebRootPath = $webRoot ? "{$deployPath}/current/{$webRoot}" : "{$deployPath}/current";
-    $directory = currentHost()->getAlias() === 'production' ? 'www' : 'subsites/'.parse_url(get('url'), PHP_URL_HOST);
+    $directory = currentHost()->getAlias() === 'production' ? 'www' : 'subsites/' . parse_url(get('url'), PHP_URL_HOST);
 
     $parts = explode('/', trim($deployPath, '/'));
     $relativeDir = implode('/', array_slice($parts, -2));
-    $assumedPath = str_replace($relativeDir, '', $deployPath).$directory;
+    $assumedPath = str_replace($relativeDir, '', $deployPath) . $directory;
 
     // check if symlink exists
     if (test("[ -L {$assumedPath} ]")) {
@@ -50,7 +50,7 @@ task('combell:host_symlink', function () {
 
     // check if assumed path is a directory
     if (test("[ -d {$assumedPath} ]")) {
-        $backupPath = $assumedPath.'.bak';
+        $backupPath = $assumedPath . '.bak';
         writeln("Assumed path {$assumedPath} is a directory, moving to {$backupPath}");
         run("mv {$assumedPath} {$assumedPath}.bak");
     }

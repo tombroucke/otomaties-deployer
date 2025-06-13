@@ -1,5 +1,4 @@
 {
-	"preset": "per",
-	"exclude": [
-	]
-  }
+  "preset": "per",
+  "exclude": []
+}

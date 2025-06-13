@@ -15,7 +15,7 @@ use function Otomaties\Deployer\basicAuthRequestHeaders;
 use function Otomaties\Deployer\cleanPath;
 use function Otomaties\Deployer\url;
 
-require_once __DIR__.'/../functions.php';
+require_once __DIR__ . '/../functions.php';
 
 option('skip-ssl-verify');
 
@@ -50,7 +50,7 @@ function opcodeCacheHasBeenReset(): bool
 {
     try {
         $info = [];
-        $request = Httpie::get(url('/opcache_reset.'.get('release_revision').'.php'))
+        $request = Httpie::get(url('/opcache_reset.' . get('release_revision') . '.php'))
             ->setopt(CURLOPT_SSL_VERIFYPEER, ! input()->getOption('skip-ssl-verify'));
 
         foreach (basicAuthRequestHeaders() as $key => $value) {

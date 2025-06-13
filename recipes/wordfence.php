@@ -13,7 +13,7 @@ use function Otomaties\Deployer\createFileIfNotExists;
 use function Otomaties\Deployer\replacePlaceholders;
 use function Otomaties\Deployer\runWpQuery;
 
-require_once __DIR__.'/../functions.php';
+require_once __DIR__ . '/../functions.php';
 
 set('wordfence/config', collect([
     // activity-report
@@ -181,10 +181,10 @@ task('wordfence:firewall_setup', function () {
     $deployPath = get('deploy_path');
     $webRoot = get('web_root');
 
-    $sharedWebRootPath = cleanPath($deployPath."/shared/{$webRoot}");
-    $currentWebRootPath = cleanPath($deployPath."/current/{$webRoot}");
-    $userIniFilePath = $sharedWebRootPath.'/.user.ini';
-    $wordfenceWafFilePath = $sharedWebRootPath.'/wordfence-waf.php';
+    $sharedWebRootPath = cleanPath($deployPath . "/shared/{$webRoot}");
+    $currentWebRootPath = cleanPath($deployPath . "/current/{$webRoot}");
+    $userIniFilePath = $sharedWebRootPath . '/.user.ini';
+    $wordfenceWafFilePath = $sharedWebRootPath . '/wordfence-waf.php';
 
     // Create .user.ini file
     createFileIfNotExists($userIniFilePath);
@@ -224,13 +224,13 @@ task('wordfence:default_configuration', function () {
     $deployPath = get('deploy_path');
 
     $query = get('wordfence/config')
-        ->map(fn ($value, $key) => '\wfConfig::set(\"'.$key.'\", \"'.replacePlaceholders($value).'\");');
+        ->map(fn($value, $key) => '\wfConfig::set(\"' . $key . '\", \"' . replacePlaceholders($value) . '\");');
 
     $notInstalledMsg = 'Wordfence not activated';
 
     $result = runWpQuery(
-        cmd: 'wp eval "if (class_exists(\'wfConfig\')) {'.$query->implode('').'} else { echo \"'.$notInstalledMsg.'\"; }"',
-        path: cleanPath("{$deployPath}/current/{$webRoot}/wp")
+        cmd: 'wp eval "if (class_exists(\'wfConfig\')) {' . $query->implode('') . '} else { echo \"' . $notInstalledMsg . '\"; }"',
+        path: cleanPath("{$deployPath}/current/{$webRoot}/wp"),
     );
 
     if (str_contains($result, $notInstalledMsg)) {

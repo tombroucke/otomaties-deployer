@@ -16,7 +16,7 @@ use function Deployer\writeln;
 use function Otomaties\Deployer\createFileIfNotExists;
 use function Otomaties\Deployer\generateSalt;
 
-require_once __DIR__.'/../functions.php';
+require_once __DIR__ . '/../functions.php';
 
 if (! file_exists('config/application.php')) {
     throw new \RuntimeException('`config/application.php` is missing. Please ensure you are in a Bedrock project directory.');
@@ -26,7 +26,7 @@ $webRoot = \collect([
     'web',
     'www',
 ])
-    ->filter(fn ($dir) => is_dir($dir) && file_exists("{$dir}/wp-config.php"))
+    ->filter(fn($dir) => is_dir($dir) && file_exists("{$dir}/wp-config.php"))
     ->first();
 
 if (! $webRoot) {
@@ -84,11 +84,11 @@ task('bedrock:create_env', function () {
         writeln('<comment>Generating .env file</comment>');
 
         // Ask for credentials
-        $dbName = ask(get('stage').' DB_NAME');
-        $dbUser = ask(get('stage').' DB_USER');
-        $dbPass = askHiddenResponse(get('stage').' DB_PASSWORD');
-        $dbHost = ask(get('stage').' DB_HOST', $dbName.'.db.webhosting.be');
-        $wpEnv = askChoice(get('stage').' WP_ENV', [
+        $dbName = ask(get('stage') . ' DB_NAME');
+        $dbUser = ask(get('stage') . ' DB_USER');
+        $dbPass = askHiddenResponse(get('stage') . ' DB_PASSWORD');
+        $dbHost = ask(get('stage') . ' DB_HOST', $dbName . '.db.webhosting.be');
+        $wpEnv = askChoice(get('stage') . ' WP_ENV', [
             'development' => 'development',
             'staging' => 'staging',
             'production' => 'production',
@@ -122,7 +122,7 @@ task('bedrock:create_env', function () {
         echo PHP_EOL;
 
         foreach ($saltKeys as $key) {
-            echo $key."='".generateSalt()."'".PHP_EOL;
+            echo $key . "='" . generateSalt() . "'" . PHP_EOL;
         }
 
         $content = ob_get_clean();

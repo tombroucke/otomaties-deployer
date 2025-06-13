@@ -14,7 +14,7 @@ use function Deployer\task;
 use function Otomaties\Deployer\cleanPath;
 use function Otomaties\Deployer\runWpQuery;
 
-require_once __DIR__.'/../functions.php';
+require_once __DIR__ . '/../functions.php';
 
 option('cmd', null, InputOption::VALUE_REQUIRED, 'The command to run', null);
 
@@ -119,9 +119,9 @@ task('wp:cli', function () {
             'yes',
             'no',
         ],
-        'plugin_name' => fn () => array_map(
-            fn ($plugin) => basename($plugin, '.php'),
-            glob($webRoot.'/app/plugins/*') ?: [],
+        'plugin_name' => fn() => array_map(
+            fn($plugin) => basename($plugin, '.php'),
+            glob($webRoot . '/app/plugins/*') ?: [],
         ),
         'post_type' => [
             'page',

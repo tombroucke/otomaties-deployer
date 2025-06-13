@@ -12,7 +12,7 @@ use function Deployer\writeln;
 use function Otomaties\Deployer\cleanPath;
 use function Otomaties\Deployer\createFileIfNotExists;
 
-require_once __DIR__.'/../functions.php';
+require_once __DIR__ . '/../functions.php';
 
 desc('Add basic authentication to a certain host');
 task('auth:password_protect', function () {

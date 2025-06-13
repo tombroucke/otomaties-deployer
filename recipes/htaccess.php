@@ -10,7 +10,7 @@ use function Deployer\test;
 use function Otomaties\Deployer\cleanPath;
 use function Otomaties\Deployer\createFileIfNotExists;
 
-require_once __DIR__.'/../functions.php';
+require_once __DIR__ . '/../functions.php';
 
 desc('Add .htaccess rule: disable access to sensitive files');
 task('htaccess:disable_access_to_sensitive_files', function () {
@@ -53,9 +53,9 @@ function appendToHtaccess(string $filepath): void
     $webRoot = get('web_root');
 
     $htaccessPath = cleanPath("{$deployPath}/shared/{$webRoot}/.htaccess");
-    $content = PHP_EOL.'# Otomaties deployer: '.$filepath.PHP_EOL;
+    $content = PHP_EOL . '# Otomaties deployer: ' . $filepath . PHP_EOL;
 
-    $content .= file_get_contents(dirname(__DIR__).'/'.$filepath);
+    $content .= file_get_contents(dirname(__DIR__) . '/' . $filepath);
 
     if (! test("grep -q {$filepath} {$htaccessPath}")) {
         createFileIfNotExists($htaccessPath);
