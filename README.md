@@ -17,6 +17,9 @@ Use `dep deploy production --skip-ssl-verify` to deploy a website without a SSL 
 
 namespace Deployer;
 
+use Illuminate\Support\Arr;
+use function Otomaties\Deployer\runWpQuery;
+
 require_once __DIR__ . '/vendor/autoload.php';
 require_once 'contrib/cachetool.php';
 require_once 'recipe/composer.php';
@@ -91,17 +94,8 @@ after('deploy:symlink', 'combell:reloadPHP');
 /** Clear OPcode cache */
 after('deploy:symlink', 'combell:reset_opcode_cache');
 
-/** Cache ACF fields */
-after('deploy:symlink', 'wp:acorn:acf:cache');
-
-/** Optimize acorn */
-after('deploy:symlink', 'wp:acorn:optimize');
-
-/** Reload cache & preload */
-after('deploy:symlink', 'wp:rocket:clean');
-
-/** Reload cache & preload */
-after('deploy:symlink', 'wp:rocket:preload');
+/** Optimize the site */
+after('deploy:symlink', 'otomaties:custom:optimize');
 
 /** Remove unused themes */
 after('deploy:cleanup', 'wp:remove_unused_themes');
@@ -109,31 +103,18 @@ after('deploy:cleanup', 'wp:remove_unused_themes');
 /** Unlock deploy */
 after('deploy:failed', 'deploy:unlock');
 
-/** Alias for wp acorn acf:cache */
-desc('Cache the ACF Composer field groups and blocks');
-task('wp:acorn:acf:cache', function () {
-    runWpQuery('wp acorn acf:cache');
-});
+/** Optimize the site */
+desc('Optimize the site');
+task('otomaties:custom:optimize', function () {
+    $commands = [
+        'wp acorn acf:cache',
+        'wp acorn optimize',
+        'wp rocket regenerate --file=advanced-cache',
+        'wp rocket clean --confirm',
+        'wp rocket preload',
+    ];
 
-/** Aliases */
-desc('Cache the ACF Composer field groups and blocks');
-task('wp:acorn:acf:cache', function () {
-    runWpQuery('wp acorn acf:cache');
-});
-
-desc('Cache framework bootstrap, configuration, and metadata to increase performance');
-task('wp:acorn:optimize', function () {
-    runWpQuery('wp acorn optimize');
-});
-
-desc('Regenerate advanced-cache.php and clean the cache');
-task('wp:rocket:clean', function () {
-    runWpQuery('wp rocket regenerate --file=advanced-cache && wp rocket clean --confirm');
-});
-
-desc('Preload the cache');
-task('wp:rocket:preload', function () {
-    runWpQuery('wp rocket preload');
+    runWpQuery(Arr::join($commands, ' && '));
 });
 ```
 
