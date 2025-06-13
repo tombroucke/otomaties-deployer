@@ -79,7 +79,7 @@ set('wordfence/config', collect([
     'displayTopLevelOptions' => '1',
     'liveTraf_displayExpandedRecords' => '0',
     // email-alert-preferences
-    'alertEmails' => '{{ alert_email }}',
+    'alertEmails' => '{{ wordfence_alert_email }}',
     'alertOn_adminLogin' => '0',
     'alertOn_block' => '0',
     'alertOn_breachLogin' => '0',
@@ -108,8 +108,8 @@ set('wordfence/config', collect([
     'liveActivityPauseEnabled' => '1',
     'other_WFNet' => '1',
     // loginsec
-    'loginSec_maxFailures' => '{{ max_login_failures:3 }}',
-    'loginSec_maxForgotPasswd' => '{{ max_forgot_password:3 }}',
+    'loginSec_maxFailures' => '{{ wordfence_max_login_failures:3 }}',
+    'loginSec_maxForgotPasswd' => '{{ wordfence_max_forgot_password:3 }}',
     'loginSec_userBlacklist' => collect([
         'admin',
         'administrator',
@@ -121,8 +121,8 @@ set('wordfence/config', collect([
         'itsme',
         'hostingadmin',
         'info-bold-themes-com',
-        '{{ domain_no_extension }}',
-        '{{ domain_extension }}',
+        '{{ wordfence_domain_no_extension }}',
+        '{{ wordfence_domain_extension }}',
     ])->implode('\n'),
     // notifications
     'notification_blogHighlights' => '0',
