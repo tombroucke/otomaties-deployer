@@ -30,15 +30,15 @@ function runWpQuery(string $cmd, string $path = '{{release_path}}'): mixed
     });
 }
 
-function replacePlaceholders(string $query): string
+function replacePlaceholders(string|int|null $query): string
 {
     preg_match_all('/{{\s(.*?)(?::(.*?))?\s}}/', $query, $matches, PREG_SET_ORDER);
 
     $url = parse_url(get('url'), PHP_URL_HOST);
 
     $defaults = [
-        'domain_no_extension' => preg_replace('/\.[^.]*$/', '', $url),
-        'domain_extension' => $url,
+        'wordfence_domain_no_extension' => preg_replace('/\.[^.]*$/', '', $url),
+        'wordfence_domain_extension' => $url,
     ];
 
     collect($matches)
