@@ -11,10 +11,11 @@ use function Deployer\option;
 use function Deployer\run;
 use function Deployer\task;
 use function Deployer\writeln;
+use function Otomaties\Deployer\basicAuthRequestHeaders;
 use function Otomaties\Deployer\cleanPath;
-use function Otomaties\Deployer\requestHeaders;
+use function Otomaties\Deployer\url;
 
-require_once __DIR__ . '/../functions.php';
+require_once __DIR__.'/../functions.php';
 
 option('skip-ssl-verify');
 
@@ -45,21 +46,21 @@ task('opcode:reset_cache', function () {
     run("rm {$opCacheResetFilePath}");
 });
 
-function opcodeCacheHasBeenReset()
+function opcodeCacheHasBeenReset(): bool
 {
     try {
         $info = [];
-        $request = Httpie::get(url('/opcache_reset.' . get('release_revision') . '.php'))
+        $request = Httpie::get(url('/opcache_reset.'.get('release_revision').'.php'))
             ->setopt(CURLOPT_SSL_VERIFYPEER, ! input()->getOption('skip-ssl-verify'));
 
-        foreach (requestHeaders() as $key => $value) {
+        foreach (basicAuthRequestHeaders() as $key => $value) {
             $request = $request->header($key, $value);
         }
 
         $request
             ->send($info);
 
-        return $info['http_code'] === 200;
+        return ($info['http_code'] ?? false) === 200;
     } catch (\Throwable $th) {
         writeln($th->getMessage());
 

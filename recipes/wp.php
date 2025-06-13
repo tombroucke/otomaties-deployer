@@ -14,7 +14,7 @@ use function Deployer\task;
 use function Otomaties\Deployer\cleanPath;
 use function Otomaties\Deployer\runWpQuery;
 
-require_once __DIR__ . '/../functions.php';
+require_once __DIR__.'/../functions.php';
 
 option('cmd', null, InputOption::VALUE_REQUIRED, 'The command to run', null);
 
@@ -121,7 +121,7 @@ task('wp:cli', function () {
         ],
         'plugin_name' => fn () => array_map(
             fn ($plugin) => basename($plugin, '.php'),
-            glob($webRoot . '/app/plugins/*'),
+            glob($webRoot.'/app/plugins/*') ?: [],
         ),
         'post_type' => [
             'page',
@@ -150,7 +150,13 @@ task('wp:cli', function () {
             $options = $options();
         }
 
-        $command = str_replace($match[0], ask("Please provide a value for {$variable}:", $default, $options), $command);
+        $value = ask("Please provide a value for {$variable}:", $default, $options);
+
+        if (! $value) {
+            throw new \RuntimeException("You must provide a value for {$variable}.");
+        }
+
+        $command = str_replace($match[0], $value, $command);
     }
 
     if (empty($command)) {

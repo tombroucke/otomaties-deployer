@@ -14,11 +14,12 @@ use function Deployer\run;
 use function Deployer\task;
 use function Deployer\test;
 use function Deployer\writeln;
+use function Otomaties\Deployer\basicAuthRequestHeaders;
 use function Otomaties\Deployer\Recipes\Opcode\opcodeCacheHasBeenReset;
-use function Otomaties\Deployer\requestHeaders;
+use function Otomaties\Deployer\url;
 
-require_once __DIR__ . '/../functions.php';
-require_once __DIR__ . '/opcode.php';
+require_once __DIR__.'/../functions.php';
+require_once __DIR__.'/opcode.php';
 
 option('skip-ssl-verify');
 
@@ -28,11 +29,11 @@ task('combell:host_symlink', function () {
     $deployPath = get('deploy_path');
     $webRoot = get('web_root');
     $fullWebRootPath = $webRoot ? "{$deployPath}/current/{$webRoot}" : "{$deployPath}/current";
-    $directory = currentHost()->getAlias() === 'production' ? 'www' : 'subsites/' . parse_url(get('url'), PHP_URL_HOST);
+    $directory = currentHost()->getAlias() === 'production' ? 'www' : 'subsites/'.parse_url(get('url'), PHP_URL_HOST);
 
     $parts = explode('/', trim($deployPath, '/'));
     $relativeDir = implode('/', array_slice($parts, -2));
-    $assumedPath = str_replace($relativeDir, '', $deployPath) . $directory;
+    $assumedPath = str_replace($relativeDir, '', $deployPath).$directory;
 
     // check if symlink exists
     if (test("[ -L {$assumedPath} ]")) {
@@ -49,7 +50,7 @@ task('combell:host_symlink', function () {
 
     // check if assumed path is a directory
     if (test("[ -d {$assumedPath} ]")) {
-        $backupPath = $assumedPath . '.bak';
+        $backupPath = $assumedPath.'.bak';
         writeln("Assumed path {$assumedPath} is a directory, moving to {$backupPath}");
         run("mv {$assumedPath} {$assumedPath}.bak");
     }
@@ -132,26 +133,18 @@ task('combell:reset_opcode_cache', function () {
     run("rm {$opCacheResetFilePath}");
 });
 
-function url($filePath)
-{
-    $url = rtrim(get('url'), '/');
-    $filePath = ltrim($filePath, '/');
-
-    return "{$url}/{$filePath}";
-}
-
-function reloadPhp()
+function reloadPhp(): string
 {
     return run('reloadPHP.sh');
 }
 
-function revisionHasBeenUpdated($reloadedFileCheckContent)
+function revisionHasBeenUpdated(string $reloadedFileCheckContent): bool
 {
     try {
         $request = Httpie::get(url('/combell-reloaded-check.txt'))
             ->setopt(CURLOPT_SSL_VERIFYPEER, ! input()->getOption('skip-ssl-verify'));
 
-        foreach (requestHeaders() as $key => $value) {
+        foreach (basicAuthRequestHeaders() as $key => $value) {
             $request = $request->header($key, $value);
         }
 

@@ -1,0 +1,10 @@
+#$ vendor/bin/phpstan analyze
+
+parameters:
+	level: 8
+	inferPrivatePropertyTypeFromConstructor: true
+	scanDirectories:
+		- vendor/deployer
+	paths:
+		- functions.php
+		- recipes

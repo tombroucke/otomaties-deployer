@@ -37,19 +37,23 @@ function runWpQuery(string $cmd, string $path = '{{release_path}}'): mixed
     });
 }
 
-function replacePlaceholders(string|int|null $query): string
+function replacePlaceholders(string|int|null $text): string
 {
-    preg_match_all('/{{\s(.*?)(?::(.*?))?\s}}/', $query, $matches, PREG_SET_ORDER);
+    if (is_null($text) || is_int($text)) {
+        return (string) $text;
+    }
+
+    preg_match_all('/{{\s(.*?)(?::(.*?))?\s}}/', $text, $matches, PREG_SET_ORDER);
 
     $url = parse_url(get('url'), PHP_URL_HOST);
 
     $defaults = [
-        'wordfence_domain_no_extension' => preg_replace('/\.[^.]*$/', '', $url),
-        'wordfence_domain_extension' => $url,
+        'wordfence_domain_no_extension' => is_string($url) ? preg_replace('/\.[^.]*$/', '', $url) : null,
+        'wordfence_domain_extension' => is_string($url) ? $url : null,
     ];
 
     collect($matches)
-        ->each(function ($match) use (&$query, $defaults) {
+        ->each(function ($match) use (&$text, $defaults) {
             $replace = $match[0];
             $key = $match[1];
             $defaultValue = $match[2] ?? $defaults[$key] ?? '';
@@ -60,13 +64,18 @@ function replacePlaceholders(string|int|null $query): string
                 $value = ask("Enter a value for {$key}", $defaultValue);
             }
 
-            $query = str_replace($replace, $value, $query);
+            $text = str_replace($replace, $value, $text);
         });
 
-    return trim(str_replace("'", '"', $query));
+    return trim(str_replace("'", '"', $text));
 }
 
-function requestHeaders(): array
+/**
+ * Basic Auth headers for HTTP requests.
+ *
+ * @return array<string, string>
+ */
+function basicAuthRequestHeaders(): array
 {
     $headers = [];
 
@@ -98,5 +107,14 @@ function cleanPath(string $path): string
     return Str::of($path)
         ->replace(['\\', '//'], '/')
         ->replace(['../', './'], '')
+        ->toString();
+}
+
+function url(?string $filePath): string
+{
+    return Str::of(get('url'))
+        ->rtrim('/')
+        ->append('/')
+        ->append($filePath ? ltrim($filePath, '/') : '')
         ->toString();
 }

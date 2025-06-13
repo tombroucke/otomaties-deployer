@@ -12,7 +12,7 @@ use function Deployer\writeln;
 use function Otomaties\Deployer\cleanPath;
 use function Otomaties\Deployer\createFileIfNotExists;
 
-require_once __DIR__ . '/../functions.php';
+require_once __DIR__.'/../functions.php';
 
 desc('Add basic authentication to a certain host');
 task('auth:password_protect', function () {
@@ -25,6 +25,13 @@ task('auth:password_protect', function () {
 
     $username = ask('username', get('basic_auth_user'));
     $password = ask('password', get('basic_auth_pass'));
+
+    if (empty($username) || empty($password)) {
+        writeln('<error>Username and password cannot be empty</error>');
+
+        return;
+    }
+
     $encryptedPassword = crypt($password, base64_encode($password));
 
     if (! test("grep -q {$username}: {$fullWebRootSharedPath}/.htpasswd")) {
