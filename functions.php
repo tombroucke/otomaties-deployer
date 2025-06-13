@@ -4,7 +4,7 @@ namespace Deployer;
 
 use Illuminate\Support\Str;
 
-function createFileIfNotExists($path): bool
+function createFileIfNotExists(string $path): bool
 {
     if (! test("[ -f {$path} ]")) {
         run("mkdir -p $(dirname {$path})");
@@ -16,7 +16,7 @@ function createFileIfNotExists($path): bool
     return false;
 }
 
-function runWpQuery($cmd, $path = '{{release_path}}')
+function runWpQuery(string $cmd, string $path = '{{release_path}}'): mixed
 {
     $cmd = str_starts_with($cmd, 'wp ') ? $cmd : "wp {$cmd}";
 
@@ -30,7 +30,7 @@ function runWpQuery($cmd, $path = '{{release_path}}')
     });
 }
 
-function replacePlaceholders($query)
+function replacePlaceholders(string $query): string
 {
     preg_match_all('/{{\s(.*?)(?::(.*?))?\s}}/', $query, $matches, PREG_SET_ORDER);
 
@@ -59,7 +59,7 @@ function replacePlaceholders($query)
     return trim(str_replace("'", '"', $query));
 }
 
-function requestHeaders()
+function requestHeaders(): array
 {
     $headers = [];
 
@@ -74,7 +74,7 @@ function requestHeaders()
     return $headers;
 }
 
-function generateSalt()
+function generateSalt(): string
 {
     $salt = '';
     $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%^&*()-_[]{}<>~+=,.;:/?|';
@@ -86,7 +86,7 @@ function generateSalt()
     return $salt;
 }
 
-function cleanPath($path)
+function cleanPath(string $path): string
 {
     return Str::of($path)
         ->replace(['\\', '//'], '/')
