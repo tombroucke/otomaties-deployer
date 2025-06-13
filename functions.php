@@ -32,7 +32,6 @@ function runWpQuery($cmd, $path = '{{release_path}}')
 
 function replacePlaceholders($query)
 {
-    // Extracting placeholders and default values
     preg_match_all('/{{\s(.*?)(?::(.*?))?\s}}/', $query, $matches, PREG_SET_ORDER);
 
     $url = parse_url(get('url'), PHP_URL_HOST);
@@ -45,12 +44,13 @@ function replacePlaceholders($query)
         $replace = $match[0];
         $key = $match[1];
         $defaultValue = $match[2] ?? $defaults[$key] ?? '';
-        if (get($key) && get($key) !== '') {
-            $value = get($key);
-        } else {
+        $value = get($key);
+
+        if (! filled($value)) {
             $defaultValue = filled($defaultValue) ? $defaultValue : null;
             $value = ask("Enter a value for {$key}", $defaultValue);
         }
+
         $query = str_replace($replace, $value, $query);
     }
 
