@@ -218,7 +218,7 @@ dep wordfence:default_configuration
 #### Add .htaccess rules for security
 
 ```bash
-dep htaccess:add_all_rules
+dep otomaties:htaccess_rules
 ```
 
 ### Database handling
