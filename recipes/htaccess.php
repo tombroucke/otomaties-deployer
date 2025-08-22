@@ -32,14 +32,9 @@ task('htaccess:7g_firewall', function () {
     appendToHtaccess('snippets/htaccess/7g-firewall.txt');
 });
 
-desc('Add .htaccess rule: Woff2 Expires headers');
-task('htaccess:woff2_expires_headers', function () {
-    appendToHtaccess('snippets/htaccess/woff2-expires-headers.txt');
-});
-
-desc('Add .htaccess rule: text/javascript Expires headers');
-task('htaccess:text_javascript_expires', function () {
-    appendToHtaccess('snippets/htaccess/text-javascript-expires-headers.txt');
+desc('Add .htaccess rule: cache headers');
+task('htaccess:cache_headers', function () {
+    appendToHtaccess('snippets/htaccess/cache-headers.txt');
 });
 
 desc('Add .htaccess rule: Security headers');
@@ -71,7 +66,6 @@ task('htaccess:add_all_rules', [
     'htaccess:disable_access_to_blade_files',
     'htaccess:disable_xmlrpc',
     'htaccess:7g_firewall',
-    'htaccess:woff2_expires_headers',
-    'htaccess:text_javascript_expires',
+    'htaccess:cache_headers',
     'htaccess:security_headers',
 ]);

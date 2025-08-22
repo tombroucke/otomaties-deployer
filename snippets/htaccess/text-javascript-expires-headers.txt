@@ -1,5 +1,0 @@
-# BEGIN text/javascript expires headers
-<IfModule mod_expires.c>
-	ExpiresByType text/javascript        "access plus 1 year"
-</IfModule>
-# END text/javascript expires headers
