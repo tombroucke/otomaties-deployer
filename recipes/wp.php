@@ -5,6 +5,7 @@ namespace Otomaties\Deployer\Recipes\Wp;
 use Symfony\Component\Console\Input\InputOption;
 
 use function Deployer\ask;
+use function Deployer\askConfirmation;
 use function Deployer\desc;
 use function Deployer\get;
 use function Deployer\input;
@@ -152,8 +153,12 @@ task('wp:cli', function () {
 
         $value = ask("Please provide a value for {$variable}:", $default, $options);
 
-        if (! $value) {
-            throw new \RuntimeException("You must provide a value for {$variable}.");
+        if (is_null($value)) {
+            $nullConfirmation = askConfirmation("Are you sure you want to leave {$variable} empty? (y/n)", 'n');
+
+            if (! $nullConfirmation) {
+                throw new \RuntimeException("You must provide a value for {$variable}.");
+            }
         }
 
         $command = str_replace($match[0], $value, $command);
