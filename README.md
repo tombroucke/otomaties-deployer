@@ -136,6 +136,11 @@ task('wp:runcloud-hub:purgeall', function () {
 });
 ```
 
+To clear the opcode cache on a runcloud server, you need to add cachetool_args. E.g.:
+```php
+set('cachetool_args', '--web=SymfonyHttpClient --web-path={{deploy_path}}/current/web --web-url={{url}}');
+```
+
 ## WordPress
 
 ```php
