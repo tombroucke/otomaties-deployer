@@ -57,7 +57,7 @@ desc('Compiles the theme locally for production');
 task('sage:compile', function () {
     $sageThemePath = prependedSageThemePath();
 
-    runLocally("cd $sageThemePath && npm install && npm run {{sage/build_command}}");
+    runLocally("cd $sageThemePath && npm ci && npm run {{sage/build_command}}");
 });
 
 desc('Updates remote assets with local assets, but without deleting previous assets on destination');
