@@ -104,17 +104,15 @@ function generateSalt(): string
 
 function cleanPath(string $path): string
 {
-    return Str::of($path)
+    return (string) Str::of($path)
         ->replace(['\\', '//'], '/')
-        ->replace(['../', './'], '')
-        ->toString();
+        ->replace(['../', './'], '');
 }
 
 function url(?string $filePath): string
 {
-    return Str::of(get('url'))
+    return (string) Str::of(get('url'))
         ->rtrim('/')
         ->append('/')
-        ->append($filePath ? ltrim($filePath, '/') : '')
-        ->toString();
+        ->append($filePath ? ltrim($filePath, '/') : '');
 }

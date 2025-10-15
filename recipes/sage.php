@@ -82,10 +82,9 @@ function prependedSageThemePath(): ?string
         return null;
     }
 
-    return Str::of($themePath)
+    return (string) Str::of($themePath)
         ->trim('/')
         ->replaceFirst($webRoot . '/', '')
         ->prepend($webRoot . '/')
-        ->trim('/')
-        ->toString();
+        ->trim('/');
 }
