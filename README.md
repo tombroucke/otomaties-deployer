@@ -107,6 +107,8 @@ after('deploy:failed', 'deploy:unlock');
 desc('Optimize the site');
 task('otomaties:custom:optimize', function () {
     $commands = [
+        'wp core update-db',
+        // 'wp wc update',
         'wp acorn acf:cache',
         'wp acorn optimize',
         'wp cfcache purge_cache',
