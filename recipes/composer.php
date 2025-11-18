@@ -42,5 +42,5 @@ task('composer:upload_auth_json', function () {
 
 desc('Remove auth.json from remote');
 task('composer:remove_auth_json', function () {
-    run('rm {{release_path}}/auth.json');
+    run('rm -f {{release_path}}/auth.json');
 })->oncePerNode();
