@@ -111,7 +111,7 @@ task('otomaties:custom:optimize', function () {
         // 'wp wc update',
         'wp acorn acf:cache',
         'wp acorn optimize',
-        'wp cfcache purge_cache',
+        'wp cfcache purge_cache || true',
     ];
 
     runWpQuery(Arr::join($commands, ' && '));
