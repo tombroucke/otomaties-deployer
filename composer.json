@@ -1,5 +1,8 @@
 {
   "name": "tombroucke/otomaties-deployer",
+  "keywords": [
+    "dev"
+  ],
   "description": "Deploy roots/bedrock & roots/sage to Combell, Runcloud.",
   "type": "library",
   "authors": [
