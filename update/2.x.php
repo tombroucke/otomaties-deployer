@@ -24,14 +24,6 @@ if (strpos($contents, 'use function Otomaties\Deployer\runWpQuery') === false) {
     );
 }
 
-if (strpos($contents, 'use Illuminate\Support\Arr;') === false) {
-    $contents = preg_replace(
-        '/namespace Deployer;/',
-        '$0 ' . PHP_EOL . PHP_EOL . 'use Illuminate\Support\Arr;',
-        $contents,
-    );
-}
-
 if (strpos($contents, 'sage:check') === false) {
     $contents = preg_replace(
         '/\/\*\* Install theme dependencies \*\//',
@@ -127,15 +119,17 @@ after('deploy:symlink', 'otomaties:custom:optimize');
 /** Optimize the site */
 desc('Optimize the site');
 task('otomaties:custom:optimize', function () {
-    \$commands = [
-        'wp acorn acf:cache',
-        'wp acorn optimize',
-        'wp rocket regenerate --file=advanced-cache',
-        'wp rocket clean --confirm',
-        'wp rocket preload',
-    ];
+    \$languages = implode(' ', [
+        'nl_NL',
+    ]);
 
-    runWpQuery(Arr::join(\$commands, ' && '));
+    runWpQuery([
+        'wp language core install ' . \$languages . ' & wp language plugin install --all ' . \$languages . ' & wait',
+        'wp core update-db',
+        // 'wp wc update',
+        'wp acorn optimize',
+        'wp cfcache purge_cache',
+    ]);
 });";
 }
 

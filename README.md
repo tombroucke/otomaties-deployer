@@ -17,7 +17,6 @@ Use `dep deploy production --skip-ssl-verify` to deploy a website without a SSL 
 
 namespace Deployer;
 
-use Illuminate\Support\Arr;
 use function Otomaties\Deployer\runWpQuery;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -106,14 +105,17 @@ after('deploy:failed', 'deploy:unlock');
 /** Optimize the site */
 desc('Optimize the site');
 task('otomaties:custom:optimize', function () {
-    $commands = [
+    $languages = implode(' ', [
+        'nl_NL',
+    ]);
+
+    runWpQuery([
+        'wp language core install ' . $languages . ' & wp language plugin install --all ' . $languages . ' & wait',
         'wp core update-db',
         // 'wp wc update',
         'wp acorn optimize',
-        'wp cfcache purge_cache || true',
-    ];
-
-    runWpQuery(Arr::join($commands, ' && '));
+        'wp cfcache purge_cache',
+    ]);
 });
 ```
 
@@ -138,6 +140,7 @@ task('wp:runcloud-hub:purgeall', function () {
 ```
 
 To clear the opcode cache on a runcloud server, you need to add cachetool_args. E.g.:
+
 ```php
 set('cachetool_args', '--web=SymfonyHttpClient --web-path={{deploy_path}}/current/web --web-url={{url}}');
 ```
