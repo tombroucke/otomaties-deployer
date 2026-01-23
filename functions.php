@@ -23,8 +23,9 @@ function createFileIfNotExists(string $path): bool
     return false;
 }
 
-function runWpQuery(string $cmd, string $path = '{{release_path}}'): mixed
+function runWpQuery(string|array $cmd, string $path = '{{release_path}}'): mixed
 {
+    $cmd = is_array($cmd) ? implode(' && ', $cmd) : $cmd;
     $cmd = str_starts_with($cmd, 'wp ') ? $cmd : "wp {$cmd}";
 
     writeln("<info>Running WP CLI command:</info> <comment>{$cmd}</comment> in <comment>{$path}</comment>");
