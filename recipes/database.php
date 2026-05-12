@@ -50,7 +50,7 @@ task('wp:db:pull', function () {
 
         // import database locally
         $localWpPath = cleanPath("{$webRoot}/wp");
-        $importCommand = "wp db import {$tmpFile} --allow-root --path={$localWpPath}";
+        $importCommand = "wp db import --allow-root --path={$localWpPath} - < {$tmpFile}";
         writeln('Importing database locally using command: ' . $importCommand);
         runLocally($importCommand);
 
