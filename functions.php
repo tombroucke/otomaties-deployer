@@ -33,7 +33,7 @@ function runWpQuery(string|array $cmd, string $path = '{{release_path}}'): mixed
     return within($path, function () use ($cmd) {
         return run(
             command: $cmd,
-            real_time_output: true,
+            forceOutput: true,
         );
     });
 }

@@ -14,7 +14,7 @@
   "require": {
     "php": "^8.0",
     "vlucas/phpdotenv": "^5.4",
-    "deployer/deployer": "^7.0",
+    "deployer/deployer": "^8.0",
     "illuminate/support": "*"
   },
   "require-dev": {
