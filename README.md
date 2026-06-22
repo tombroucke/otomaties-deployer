@@ -119,6 +119,11 @@ task('otomaties:custom:optimize', function () {
 });
 ```
 
+## Languages
+
+Since 3.0.0, languages should be excluded from your git repo, and installed during deploy with `wp language core install`....
+See above example.
+
 ## Runcloud Hub
 
 ```php
