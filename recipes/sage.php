@@ -48,8 +48,9 @@ task('sage:check', function () {
 desc('Runs composer install on remote server');
 task('sage:vendors', function () {
     $sageThemePath = prependedSageThemePath();
+    $releasePath = get('release_path');
 
-    run('{{bin/composer}} install {{composer_options}}', cwd: "{{release_path}}/$sageThemePath");
+    run('{{bin/composer}} install {{composer_options}}', cwd: "$releasePath/$sageThemePath");
 });
 
 /** Build & copy sage assets */
@@ -63,8 +64,9 @@ task('sage:compile', function () {
 desc('Updates remote assets with local assets, but without deleting previous assets on destination');
 task('sage:upload_assets', function () {
     $sageThemePath = prependedSageThemePath();
+    $releasePath = get('release_path');
 
-    upload("$sageThemePath/{{sage/public_dir}}", "{{release_path}}/$sageThemePath");
+    upload("$sageThemePath/{{sage/public_dir}}", "$releasePath/$sageThemePath");
 });
 
 desc('Builds assets and uploads them to remote server');
