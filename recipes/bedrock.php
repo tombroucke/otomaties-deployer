@@ -52,23 +52,11 @@ add('shared_dirs', [
     '{{ web_root }}/app/blogs.dir',
     '{{ web_root }}/app/ewww',
     '{{ web_root }}/app/fonts',
-    '{{ web_root }}/app/languages',
     '{{ web_root }}/app/uploads',
     '{{ web_root }}/app/upgrade',
     '{{ web_root }}/app/wflogs',
     '{{ web_root }}/app/wp-rocket-config',
 ]);
-
-before('deploy:prepare', function () {
-    $webRoot = get('web_root');
-    $output = runLocally("git ls-files {$webRoot}/app/languages 2>&1", nothrow: true);
-
-    if (! empty(trim($output))) {
-        throw new \RuntimeException(
-            "`{$webRoot}/app/languages` is tracked in git but should be a shared directory. See [languages](https://github.com/tombroucke/otomaties-deployer#languages)",
-        );
-    }
-});
 
 desc('Create the .env file on the server');
 task('bedrock:create_env', function () {
