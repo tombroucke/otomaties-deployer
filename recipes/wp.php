@@ -178,3 +178,17 @@ task('wp:remove_unused_themes', function () {
     $path = cleanPath("{$webRoot}/wp/wp-content/themes");
     run("rm -rf {$path}/twenty*");
 });
+
+desc('Install languages');
+task('wp:install_languages', function () {
+    $languages = get('wp/languages');
+    if (empty($languages)) {
+        writeln('<comment>No languages configured. Skipping language installation.</comment>');
+
+        return;
+    }
+
+    $languagesString = implode(' ', $languages);
+    run("wp language core install {$languagesString}", cwd: get('release_path'));
+    run("wp language plugin install --all {$languagesString}", cwd: get('release_path'));
+})->oncePerNode();

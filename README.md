@@ -52,6 +52,11 @@ set('repository', 'git@github.com:username/example.com.git');
 set('sage/build_command', 'build'); // build:production for mix
 set('sage/theme_path', 'app/themes/example');
 
+/** WP */
+set('wp/languages', [
+    'nl_NL',
+]);
+
 /** Hosts */
 host('production')
     ->set('hostname', 'ssh###.webhosting.be')
@@ -93,6 +98,9 @@ after('deploy:symlink', 'combell:reloadPHP');
 /** Clear OPcode cache */
 after('deploy:symlink', 'combell:reset_opcode_cache');
 
+/** Install languages */
+after('deploy:symlink', 'wp:install_languages');
+
 /** Optimize the site */
 after('deploy:symlink', 'otomaties:custom:optimize');
 
@@ -105,12 +113,7 @@ after('deploy:failed', 'deploy:unlock');
 /** Optimize the site */
 desc('Optimize the site');
 task('otomaties:custom:optimize', function () {
-    $languages = implode(' ', [
-        'nl_NL',
-    ]);
-
     runWpQuery([
-        'wp language core install ' . $languages . ' & wp language plugin install --all ' . $languages . ' & wait',
         'wp core update-db',
         // 'wp wc update',
         'wp acorn optimize',
@@ -121,8 +124,7 @@ task('otomaties:custom:optimize', function () {
 
 ## Languages
 
-Since 3.0.0, languages should be excluded from your git repo, and installed during deploy with `wp language core install`....
-See above example.
+Languages should be excluded from your git repo and installed during deploy with `wp:install_languages`.
 
 ## Runcloud Hub
 
