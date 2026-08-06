@@ -158,6 +158,7 @@ task('wp:db:push', function () {
         );
 
         run(replaceCollation($remoteDbFilePath));
+        run(stripPrivilegedSetStatements($remoteDbFilePath));
 
         // Import database on server
         $remoteWpPath = cleanPath("{{deploy_path}}/current/{$webRoot}/wp");
@@ -192,4 +193,9 @@ task('wp:db:push', function () {
 function replaceCollation(string $filePath): string
 {
     return "sed -i 's/utf8mb4_0900_ai_ci/utf8mb4_unicode_ci/g' {$filePath}";
+}
+
+function stripPrivilegedSetStatements(string $filePath): string
+{
+    return "sed -i '/^SET @@SESSION/d; /^SET @@GLOBAL/d; /^SET @MYSQLDUMP_TEMP_LOG_BIN/d' {$filePath}";
 }
