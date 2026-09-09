@@ -22,6 +22,7 @@ require_once __DIR__ . '/../functions.php';
 desc('Pull Database');
 task('wp:db:pull', function () {
     $localUrl = ask('Local URL', $_SERVER['WP_HOME']);
+    $excludeHposTables = askConfirmation('Exclude WooCommerce HPOS tables?', false);
     $date = date('Y-m-d_H-i-s');
     $uniqueId = uniqid();
     $dbFilename = "db-{$date}-{$uniqueId}.sql";
@@ -33,7 +34,8 @@ task('wp:db:pull', function () {
     try {
         // Export database on server
         $remoteWpPath = cleanPath("{{deploy_path}}/current/{$webRoot}/wp");
-        $exportCommand = "wp db export {$remoteDbFilePath} --path={$remoteWpPath}";
+        $excludeTablesFlag = $excludeHposTables ? ' ' . hposExcludeTablesFlag($remoteWpPath) : '';
+        $exportCommand = "wp db export {$remoteDbFilePath} --path={$remoteWpPath}{$excludeTablesFlag}";
         writeln("Exporting database to {$remoteDbFilePath} using command: {$exportCommand}");
         run($exportCommand);
 
@@ -82,6 +84,7 @@ task('wp:db:pull', function () {
 
 desc('Download Database');
 task('wp:db:download', function () {
+    $excludeHposTables = askConfirmation('Exclude WooCommerce HPOS tables?', false);
     $date = date('Y-m-d_H-i-s');
     $uniqueId = uniqid();
     $dbFilename = Str::slug(get('application')) . "-{$date}-{$uniqueId}.sql";
@@ -93,7 +96,8 @@ task('wp:db:download', function () {
     try {
         // Export database on server
         $remoteWpPath = cleanPath("{{deploy_path}}/current/{$webRoot}/wp");
-        $exportCommand = "wp db export {$remoteDbFilePath} --path={$remoteWpPath}";
+        $excludeTablesFlag = $excludeHposTables ? ' ' . hposExcludeTablesFlag($remoteWpPath) : '';
+        $exportCommand = "wp db export {$remoteDbFilePath} --path={$remoteWpPath}{$excludeTablesFlag}";
         writeln("Exporting database to {$remoteDbFilePath} using command: {$exportCommand}");
         run($exportCommand);
 
@@ -132,6 +136,7 @@ task('wp:db:push', function () {
     }
 
     $localUrl = ask('Local URL', $_SERVER['WP_HOME']);
+    $excludeHposTables = askConfirmation('Exclude WooCommerce HPOS tables?', false);
     $date = date('Y-m-d_H-i-s');
     $uniqueId = uniqid();
     $dbFilename = "db-{$date}-{$uniqueId}.sql";
@@ -143,8 +148,9 @@ task('wp:db:push', function () {
     try {
         // Export database locally
         $localWpPath = cleanPath("{$webRoot}/wp");
+        $excludeTablesFlag = $excludeHposTables ? ' ' . hposExcludeTablesFlag($localWpPath, true) : '';
         writeln("Exporting database to {$tmpFile}");
-        runLocally("wp db export {$tmpFile} --allow-root --path={$localWpPath}");
+        runLocally("wp db export {$tmpFile} --allow-root --path={$localWpPath}{$excludeTablesFlag}");
 
         // Upload database
         writeln("Uploading database to {$remoteDbFilePath}");
@@ -198,4 +204,27 @@ function replaceCollation(string $filePath): string
 function stripPrivilegedSetStatements(string $filePath): string
 {
     return "sed -i '/^SET @@SESSION/d; /^SET @@GLOBAL/d; /^SET @MYSQLDUMP_TEMP_LOG_BIN/d' {$filePath}";
+}
+
+function hposExcludeTablesFlag(string $wpPath, bool $local = false): string
+{
+    $tables = [
+        'wc_orders',
+        'wc_orders_meta',
+        'wc_order_addresses',
+        'wc_order_operational_data',
+        'wc_order_coupon_lookup',
+        'wc_order_product_lookup',
+        'wc_order_stats',
+        'wc_order_tax_lookup',
+    ];
+
+    $getPrefixCommand = "wp config get table_prefix --path={$wpPath}";
+    $prefix = $local
+        ? trim(runLocally($getPrefixCommand))
+        : trim(run($getPrefixCommand));
+
+    $tableList = implode(',', array_map(fn ($t) => "{$prefix}{$t}", $tables));
+
+    return "--exclude_tables={$tableList}";
 }
