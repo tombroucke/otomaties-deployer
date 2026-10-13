@@ -313,6 +313,52 @@ dep wp:cli --cmd="wp login create {login}" # Create login
 dep wp:cli --cmd="wp option update admin_email {emailaddress} --autoload=yes" # Create login
 ```
 
+## GitHub Actions
+
+The `recipes/github.php` recipe provides tasks for wiring up GitHub Actions deployments.
+
+### Deploy key
+
+Generates a fresh ed25519 key, authorises it on the target host(s), stores it as the `DEPLOY_SSH_KEY` and `SSH_KNOWN_HOSTS` Actions secrets, and registers it as a read-only deploy key on the repo. Safe to re-run — re-running rotates the key.
+
+**Requirement:** `gh` CLI logged in (`gh auth login`) with admin access to the repo.
+
+```bash
+dep github:deploy-key production
+```
+
+#### Settings
+
+```php
+// Default: derived from the `repository` setting
+set('github_deploy_key_repo', 'owner/repo');
+
+// Set to true when SSH keys are managed in a hosting control panel (e.g. Combell)
+host('production')->set('github_deploy_key_manual', true);
+```
+
+Or pass it as a one-off option:
+
+```bash
+dep github:deploy-key production -o github_deploy_key_manual=true
+```
+
+### Composer auth
+
+Stores the project-level `auth.json` as the `COMPOSER_AUTH` Actions secret. The global `~/.composer/auth.json` is intentionally ignored.
+
+```bash
+dep github:composer-auth
+```
+
+### Basic auth
+
+Reads `BASIC_AUTH_USER` and `BASIC_AUTH_PASS` from your local `.env` and stores them as the `DEPLOY_BASIC_AUTH` Actions secret (`user:pass` format). Used so the deploy workflow can make authenticated HTTP requests to a password-protected staging site.
+
+```bash
+dep github:basic-auth
+```
+
 ## Upgrading
 
 ### From v1.x to v2.x
