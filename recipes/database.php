@@ -224,7 +224,7 @@ function hposExcludeTablesFlag(string $wpPath, bool $local = false): string
         ? trim(runLocally($getPrefixCommand))
         : trim(run($getPrefixCommand));
 
-    $tableList = implode(',', array_map(fn ($t) => "{$prefix}{$t}", $tables));
+    $tableList = implode(',', array_map(fn($t) => "{$prefix}{$t}", $tables));
 
     return "--exclude_tables={$tableList}";
 }
