@@ -218,6 +218,19 @@ dep github:setup production
 dep github:deploy-key production
 ```
 
+If SSH keys on the host are managed in a hosting control panel (e.g. Combell) instead of `~/.ssh/authorized_keys`, enable manual mode. The public key is printed so you can add it in the control panel, and the command waits for your confirmation before testing it. When you rotate the key, remove the old one from the control panel yourself.
+
+```php
+host('production')
+    ->set('github_deploy_key_manual', true);
+```
+
+Or for a single run:
+
+```bash
+dep github:deploy-key production -o github_deploy_key_manual=true
+```
+
 #### Store composer auth.json as the COMPOSER_AUTH Actions secret
 
 ```bash
